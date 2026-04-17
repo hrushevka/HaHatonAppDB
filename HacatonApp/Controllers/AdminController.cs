@@ -90,7 +90,7 @@ namespace HacatonApp.Controllers
 		public IActionResult Zaiavki() => View();
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ApplyZaiavky(int id, string? adminComment = null)
+        public async Task<IActionResult> KrutiZaiavky(int id, string? adminComment = null)
         {
             var zaiavka = await _context.JuryZaiavkas.FirstOrDefaultAsync(o => o.Id == id);
             if (zaiavka == null) return NotFound();
