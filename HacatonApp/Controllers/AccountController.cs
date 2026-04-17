@@ -58,9 +58,9 @@ namespace HacatonApp.Controllers
 			}
 			ViewBag.Error = "Неверный email или пароль";
 			return View();
-		}
+        }
 
-		[HttpPost]
+        [HttpPost]
 		public async Task<IActionResult> Logout()
 		{
 			await _signInManager.SignOutAsync();
@@ -68,44 +68,6 @@ namespace HacatonApp.Controllers
 		}
 
 		// Регистрация только для участников (команды)
-		[HttpGet]
-		public IActionResult RegisterTeam() => View();
-
-		[HttpPost]
-		public async Task<IActionResult> RegisterTeam(RegisterTeamViewModel model)
-		{
-			if (ModelState.IsValid)
-			{	
-				var capitain = await _userManager.FindByIdAsync(model.CapitainId);
-				if (capitain == null) return NotFound();
-				var team = new Team
-				{
-					Name = model.Name,
-					ContactEmail = capitain.Email
-				};
-				var teamObj = _context.Teams.Add(team);
-
-				var curTeamId = teamObj.Entity.Id;
-
-
-
-                var usersIdArray = model.UsersId.ToArray();
-
-				for (int i = 0; i< usersIdArray.Length; i++)
-				{
-					var user = await _userManager.FindByIdAsync(usersIdArray[i]);
-					if (user == null) continue;
-					user.TeamID = curTeamId;
-					var resultUpd = await _userManager.UpdateAsync(user);
-					if (resultUpd.Succeeded)
-					{
-						await _userManager.AddToRoleAsync(user, "");
-					}
-					foreach (var error in resultUpd.Errors)
-						ModelState.AddModelError("", error.Description);
-				}
-			}
-			return View(model);
-		}
+		
 	}
 }
