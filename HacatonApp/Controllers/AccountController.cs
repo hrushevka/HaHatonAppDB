@@ -28,12 +28,16 @@ namespace HacatonApp.Controllers
 			_context = context;
 		}
 
-		[HttpGet]
-		public IActionResult Login() => View();
 
 		[HttpPost]
-		public async Task<IActionResult> Register(RegisterNewUserModelQ model)
+		[HttpGet]
+        public IActionResult Register() => View();
+		public async Task<IActionResult> Register(RegisterUserViewModel model)
 		{
+			if (!model.TermsAccepted)
+			{
+				ModelState.AddModelError("TermsAccepted", "Примите условия");
+			}
 			if (ModelState.IsValid)
 			{
 				var user = new ApplicationUser 
@@ -42,15 +46,27 @@ namespace HacatonApp.Controllers
 					FirstName = model.FirstName,
 					LastName = model.LastName,
 				};
-			    var result = await _userManager.CreateAsync(user, model.Password);
-			}return View();
+				var result = await _userManager.CreateAsync(user, model.Password);
+				if (result.Succeeded)
+				{
+					await _userManager.AddToRoleAsync(user, "Ghost");
+					await _signInManager.SignInAsync(user, false);
+					TempData["SuccessMessage"] = "Регистрация успешна";
+					return RedirectToAction("Index", "Home");
+				}
+				foreach (var error in result.Errors)
+					ModelState.AddModelError(string.Empty, error.Description);
+			}
+			return View();
 		}
-		public async Task<IActionResult> Login(string email, string password, string returnUrl = null)
+		[HttpGet]
+        public IActionResult Login() => View();
+        public async Task<IActionResult> Login(LoginUserViewModel model)
 		{
-			var user = await _userManager.FindByEmailAsync(email);
+			var user = await _userManager.FindByEmailAsync(model.Email);
 			if (user != null)
 			{
-				var result = await _signInManager.PasswordSignInAsync(user, password, false, false);
+				var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
 				if (result.Succeeded)
 				{
 					return RedirectToAction("Index", "Home");
@@ -58,15 +74,13 @@ namespace HacatonApp.Controllers
 			}
 			ViewBag.Error = "Неверный email или пароль";
 			return View();
-        }
+		}
 
-        [HttpPost]
+		[HttpPost]
 		public async Task<IActionResult> Logout()
 		{
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
 		}
-
-		
 	}
 }

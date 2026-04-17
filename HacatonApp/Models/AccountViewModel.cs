@@ -1,7 +1,13 @@
 ﻿namespace HacatonApp.Models
 { 
-    public class RegisterNewUserModelQ
+    public class LoginUserViewModel
     {
+        public string Password { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+    }
+    public class RegisterUserViewModel
+    {
+        public bool TermsAccepted { get; set; } = false;
 		public string Password { get; set; } = string.Empty;
 		public string Email { get; set; } = string.Empty; 
 		public string FirstName { get; set; } = string.Empty;
