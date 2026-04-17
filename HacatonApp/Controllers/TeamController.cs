@@ -18,6 +18,19 @@ namespace HacatonApp.Controllers
         }
 
         [HttpGet]
+        public IActionResult AddProject() => View();
+        [HttpPost]
+        public async Task<IActionResult> AddProject(AddProjectViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var project = new Project();
+                _context.Projects.Add(project);
+            }
+            return View(model);
+        };
+
+        [HttpGet]
         public IActionResult RegisterTeam() => View();
 
         [HttpPost]

@@ -10,6 +10,7 @@ namespace HacatonApp.Data
              : base(options) { }
 
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Project> Projects { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -17,6 +18,12 @@ namespace HacatonApp.Data
             builder.Entity<Team>(entity =>
             {
                 entity.ToTable("Teams");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+            builder.Entity<Project>(entity =>
+            {
+                entity.ToTable("Projects");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });
