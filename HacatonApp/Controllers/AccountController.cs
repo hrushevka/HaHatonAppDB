@@ -19,6 +19,7 @@ namespace HacatonApp.Controllers
 			UserManager<ApplicationUser> userManager,
 			SignInManager<ApplicationUser> signInManager,
 			RoleManager<IdentityRole> roleManager,
+			
 			ApplicationDbContext context)
 		{
 			_userManager = userManager;
@@ -31,6 +32,19 @@ namespace HacatonApp.Controllers
 		public IActionResult Login() => View();
 
 		[HttpPost]
+		public async Task<IActionResult> Register(RegisterNewUserModelQ model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = new ApplicationUser 
+				{
+					Email = model.Email,
+					FirstName = model.FirstName,
+					LastName = model.LastName,
+				};
+			    var result = await _userManager.CreateAsync(user, model.Password);
+			}return View();
+		}
 		public async Task<IActionResult> Login(string email, string password, string returnUrl = null)
 		{
 			var user = await _userManager.FindByEmailAsync(email);
