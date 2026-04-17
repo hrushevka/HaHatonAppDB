@@ -11,7 +11,7 @@ namespace HacatonApp.Data
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             // Создаём роли
-            string[] roles = { "Admin", "Jury", "Teamer" };
+            string[] roles = { "Admin", "Jury", "Teamer", "Ghost"};
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))

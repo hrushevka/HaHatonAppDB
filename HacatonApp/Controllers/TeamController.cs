@@ -3,6 +3,7 @@ using HacatonApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace HacatonApp.Controllers
 {
@@ -15,6 +16,7 @@ namespace HacatonApp.Controllers
             _context = context;
             _userManager = userManager;
         }
+
         [HttpGet]
         public IActionResult RegisterTeam() => View();
 
@@ -44,7 +46,8 @@ namespace HacatonApp.Controllers
                     var resultUpd = await _userManager.UpdateAsync(user);
                     if (resultUpd.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, "");
+                        await _userManager.AddToRoleAsync(user, "Teamer");
+                        await _userManager.RemoveFromRoleAsync(user, "Ghost");
                     }
                     foreach (var error in resultUpd.Errors)
                         ModelState.AddModelError("", error.Description);

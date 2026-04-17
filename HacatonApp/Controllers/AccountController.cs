@@ -67,7 +67,6 @@ namespace HacatonApp.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
-		// Регистрация только для участников (команды)
 		
 	}
 }
