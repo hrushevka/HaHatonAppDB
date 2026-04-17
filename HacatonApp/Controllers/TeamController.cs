@@ -35,7 +35,7 @@ namespace HacatonApp.Controllers
                 await _context.Projects.AddAsync(project);
                 await _context.SaveChangesAsync();
             }
-            return View(model);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
@@ -75,7 +75,7 @@ namespace HacatonApp.Controllers
                         ModelState.AddModelError("", error.Description);
                 }
             }
-            return View(model);
+            return RedirectToAction("Index", "Home");
         }
     }
 }

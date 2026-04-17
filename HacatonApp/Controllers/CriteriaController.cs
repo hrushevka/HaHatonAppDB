@@ -1,83 +1,79 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HacatonApp.Data;
+using HacatonApp.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HacatonApp.Controllers
 {
     public class CriteriaController : Controller
     {
+        private ApplicationDbContext _context;
+        private UserManager<ApplicationUser> _userManager;
+        public CriteriaController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
         // GET: CriteriaController
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: CriteriaController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+        [HttpGet]
+        public IActionResult Create() => View();
 
-        // GET: CriteriaController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CriteriaController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(CreateCriteriaViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var cretaria = new Criteria
+                {
+                    Name = model.Name,
+                    Weight = model.Weight
+                };
+                await _context.Criterias.AddAsync(cretaria);
             }
-            catch
-            {
-                return View();
-            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
-        // GET: CriteriaController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var criteria = _context.Criterias.FirstOrDefault(o => o.Id == id);
+            if (criteria == null) return NotFound();
+            return View(criteria);
         }
 
         // POST: CriteriaController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, CreateCriteriaViewModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var criteria = _context.Criterias.FirstOrDefault(o => o.Id == id);
+                if (criteria == null) return NotFound();
+                criteria.Name = model.Name;
+                criteria.Weight = model.Weight;
+                await _context.SaveChangesAsync();
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
 
         // GET: CriteriaController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
-        }
-
-        // POST: CriteriaController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var criteria = _context.Criterias.FirstOrDefault(o => o.Id == id);
+            if (criteria == null) return NotFound(); 
+            _context.Criterias.Remove(criteria);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }
