@@ -61,6 +61,7 @@ namespace HacatonApp.Controllers
 		}
 		[HttpGet]
         public IActionResult Login() => View();
+		[HttpPost]
         public async Task<IActionResult> Login(LoginUserViewModel model)
 		{
 			var user = await _userManager.FindByEmailAsync(model.Email);

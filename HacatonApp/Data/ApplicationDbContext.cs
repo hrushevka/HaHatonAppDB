@@ -11,6 +11,7 @@ namespace HacatonApp.Data
 
         public DbSet<Team> Teams { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<JuryZaiavka> JuryZaiavkas { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -24,6 +25,12 @@ namespace HacatonApp.Data
             builder.Entity<Project>(entity =>
             {
                 entity.ToTable("Projects");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            });
+            builder.Entity<JuryZaiavka>(entity =>
+            {
+                entity.ToTable("JuryZaiavkas");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
             });

@@ -24,7 +24,11 @@ namespace HacatonApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var project = new Project();
+                var project = new Project
+                {
+                    Name = model.Name,
+                    Description = model.Description
+                };
                 _context.Projects.Add(project);
             }
             return View(model);
