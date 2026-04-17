@@ -16,7 +16,10 @@ namespace HacatonApp.Controllers
             _context = context;
             _userManager = userManager;
         }
-
+        public IActionResult Index()
+        {
+            return View();
+        }
         [HttpGet]
         public IActionResult AddProject() => View();
         [HttpPost]
@@ -29,10 +32,11 @@ namespace HacatonApp.Controllers
                     Name = model.Name,
                     Description = model.Description
                 };
-                _context.Projects.Add(project);
+                await _context.Projects.AddAsync(project);
+                await _context.SaveChangesAsync();
             }
             return View(model);
-        };
+        }
 
         [HttpGet]
         public IActionResult RegisterTeam() => View();
@@ -49,7 +53,8 @@ namespace HacatonApp.Controllers
                     Name = model.Name,
                     ContactEmail = capitain.Email
                 };
-                var teamObj = _context.Teams.Add(team);
+                var teamObj = await _context.Teams.AddAsync(team);
+                await _context.SaveChangesAsync();
 
                 var curTeamId = teamObj.Entity.Id;
 
