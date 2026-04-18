@@ -15,15 +15,15 @@ namespace HacatonApp.Models
         public string FullName => $"{FirstName} {LastName}";
         public string Motivation { get; set; } = string.Empty; 
         public required string ContactEmail { get; set; } = string.Empty;
-        
-        public JuryZaiavkaStatus Status { get; set; }
+
+        public string Status { get; set; } = "Wait";
         public DateTime SubmitedAt { get; set; }
         public DateTime? ReviewedAt { get; set; }
         public string? AdminComment { get; set; }
     }
     public class JuryZaiavkaViewModel
     {
-        public string ZaiavkaId { get; set; }
+        public string ZaiavkaId { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Motivation { get; set; } = string.Empty;

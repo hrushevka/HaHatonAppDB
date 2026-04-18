@@ -101,7 +101,7 @@ namespace HacatonApp.Controllers
             await _userManager.AddToRoleAsync(user, "Jury");
 
             zaiavka.ReviewedAt = DateTime.Now;
-            zaiavka.Status = JuryZaiavkaStatus.Accepted;
+            zaiavka.Status = "Accepted";
             zaiavka.AdminComment = adminComment;
 
             await _context.SaveChangesAsync();
@@ -118,7 +118,7 @@ namespace HacatonApp.Controllers
             if (user == null) return NotFound();
 
             zaiavka.ReviewedAt = DateTime.Now;
-            zaiavka.Status = JuryZaiavkaStatus.Danied;
+            zaiavka.Status = "Danied";
             zaiavka.AdminComment = adminComment;
 
             await _context.SaveChangesAsync();

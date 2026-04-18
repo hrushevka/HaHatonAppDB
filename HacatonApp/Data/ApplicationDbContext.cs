@@ -108,7 +108,7 @@ namespace HacatonApp.Data
                     .HasMaxLength(1000);
 
                 entity.Property(j => j.Status)
-                    .HasDefaultValue(JuryZaiavkaStatus.Wait);
+                    .HasDefaultValue("Wait");
 
                 entity.Property(j => j.SubmitedAt)
                     .HasDefaultValueSql("GETUTCDATE()");

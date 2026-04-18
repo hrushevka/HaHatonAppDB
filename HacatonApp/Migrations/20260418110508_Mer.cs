@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HacatonApp.Migrations
 {
     /// <inheritdoc />
-    public partial class Migr1 : Migration
+    public partial class Mer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -227,7 +227,7 @@ namespace HacatonApp.Migrations
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Motivation = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     ContactEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Wait"),
                     SubmitedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     ReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AdminComment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true)

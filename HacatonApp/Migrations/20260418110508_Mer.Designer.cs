@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HacatonApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260418094606_Migr1")]
-    partial class Migr1
+    [Migration("20260418110508_Mer")]
+    partial class Mer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,10 +162,11 @@ namespace HacatonApp.Migrations
                     b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Wait");
 
                     b.Property<DateTime>("SubmitedAt")
                         .ValueGeneratedOnAdd()

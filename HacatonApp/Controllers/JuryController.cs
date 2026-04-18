@@ -44,6 +44,7 @@ namespace HacatonApp.Controllers
             {
                 var userId = _userManager.GetUserId(User);
                 if (userId == null) return NotFound();
+
                 var zaiavka = new JuryZaiavka
                 {
                     UserId = userId,
@@ -51,14 +52,17 @@ namespace HacatonApp.Controllers
                     LastName = model.LastName,
                     ContactEmail = model.ContactEmail,
                     SubmitedAt = DateTime.Now,
-                    Status = JuryZaiavkaStatus.Wait,
+                    Status = "Wait",
                     Motivation = model.Motivation
                 };
 
-                var existingApplication = _context.JuryZaiavkas
-                    .FirstOrDefault(a => a.UserId == userId && a.Status == JuryZaiavkaStatus.Wait);
                 await _context.JuryZaiavkas.AddAsync(zaiavka);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Заявка успешно отправлена!";
+                return RedirectToAction("Index", "Home"); 
             }
+
             return View(model);
         }
     }

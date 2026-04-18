@@ -159,10 +159,11 @@ namespace HacatonApp.Migrations
                     b.Property<DateTime?>("ReviewedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("Wait");
 
                     b.Property<DateTime>("SubmitedAt")
                         .ValueGeneratedOnAdd()
