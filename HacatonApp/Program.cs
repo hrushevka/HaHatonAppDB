@@ -86,7 +86,7 @@ var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 var cartService = services.GetRequiredService<IServiceProvider>();
 
 await context.Database.MigrateAsync();
-await DbInitializer.InitializeAsync(userManager, roleManager);
+await DbInit.InitializeAsync(roleManager, userManager);
 
 context.Database.EnsureCreated();
 //await 

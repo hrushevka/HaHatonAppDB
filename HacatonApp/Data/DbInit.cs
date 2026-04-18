@@ -5,10 +5,8 @@ namespace HacatonApp.Data
 {
     public class DbInit
     {
-        public static async Task InitializeAsync(IServiceProvider serviceProvider)
+        public static async Task InitializeAsync(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             // Создаём роли
             string[] roles = { "Admin", "Jury", "Teamer", "Ghost"};
