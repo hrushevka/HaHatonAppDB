@@ -1,28 +1,135 @@
-﻿@model TeamZaiavkaViewModel
+@model TeamZaiavkaViewModel
 @{
-    ViewData["Title"] = "Подать заявку";
+    ViewData["Title"] = "Заявка команды";
 }
-<h2>Заявка команды</h2>
-<form asp-action="SubmitTeamZaiavka" method="post">
-    <div class="form-group">
-        <label asp-for="TeamName">Команда</label>
-        <input asp-for="TeamName" class="form-control" />
+
+<div class="container py-5" style="max-width: 960px;">
+    <div class="mb-4">
+        <h1 class="display-6 fw-bold mb-2">Создание заявки команды</h1>
+        <p class="text-secondary mb-0">
+            Капитан команды: <strong>@Model.CaptainName</strong>. Можно собрать до <strong>5 человек</strong> вместе с капитаном.
+        </p>
     </div>
-    <div class="form-group">
-        <label asp-for="ProjectName">Проект</label>
-        <input asp-for="ProjectName" class="form-control" />
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4 p-lg-5">
+            <form asp-action="SubmitTeamZaiavka" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label asp-for="TeamName" class="form-label fw-semibold">Название команды</label>
+                        <input asp-for="TeamName" class="form-control form-control-lg" placeholder="Например, Future Builders" />
+                        <span asp-validation-for="TeamName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ContactEmail" class="form-label fw-semibold">Контактный email</label>
+                        <input asp-for="ContactEmail" class="form-control form-control-lg" placeholder="team@example.com" />
+                        <span asp-validation-for="ContactEmail" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="ProjectName" class="form-label fw-semibold">Название проекта</label>
+                        <input asp-for="ProjectName" class="form-control form-control-lg" placeholder="Например, AI Mentor" />
+                        <span asp-validation-for="ProjectName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="ProjectDescription" class="form-label fw-semibold">Описание проекта</label>
+                        <textarea asp-for="ProjectDescription" class="form-control" rows="5" placeholder="Опишите идею, проблему и ценность проекта"></textarea>
+                        <span asp-validation-for="ProjectDescription" class="text-danger small"></span>
+                    </div>
+                    <div class="col-12">
+                        <label asp-for="Motivation" class="form-label fw-semibold">Мотивация команды</label>
+                        <textarea asp-for="Motivation" class="form-control" rows="4" placeholder="Почему именно ваша команда должна участвовать?"></textarea>
+                        <span asp-validation-for="Motivation" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="mb-3">
+                    <h2 class="h4 fw-bold mb-2">Участники команды</h2>
+                    <div class="alert alert-light border mb-3">
+                        Капитан уже добавлен автоматически. Выберите ещё до <strong>4 участников</strong>, чтобы суммарный размер команды был не больше <strong>5 человек</strong>.
+                    </div>
+
+                    @if (Model.AvailableMembers.Any())
+                    {
+                        <div class="row g-3">
+                            @foreach (var member in Model.AvailableMembers)
+                            {
+                                var isChecked = Model.TeamMemberIds.Contains(member.UserId);
+                                <div class="col-md-6">
+                                    <label class="border rounded-3 p-3 d-flex gap-3 align-items-start h-100 w-100 bg-white">
+                                        @if (isChecked)
+                                        {
+                                            <input class="form-check-input mt-1 team-member-checkbox" type="checkbox" name="TeamMemberIds" value="@member.UserId" checked />
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input mt-1 team-member-checkbox" type="checkbox" name="TeamMemberIds" value="@member.UserId" />
+                                        }
+                                        <span>
+                                            <span class="fw-semibold d-block">@member.FullName</span>
+                                            <span class="text-secondary small">@member.Email</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-secondary">Сейчас нет свободных пользователей, которых можно добавить в команду.</div>
+                    }
+
+                    <div class="form-text mt-3">
+                        Выбрано дополнительно: <span id="memberCounter">@Model.TeamMemberIds.Count</span> из 4.
+                        Общий размер команды: <span id="teamCounter">@(Model.TeamMemberIds.Count + 1)</span> из 5.
+                    </div>
+                    <span asp-validation-for="TeamMemberIds" class="text-danger small d-block mt-2"></span>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-4">Отправить заявку</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Отмена</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="ProjectDescription">Описание</label>
-        <textarea asp-for="ProjectDescription" class="form-control"></textarea>
-    </div>
-    <div class="form-group">
-        <label asp-for="ContactEmail">Email</label>
-        <input asp-for="ContactEmail" class="form-control" />
-    </div>
-    <div class="form-group">
-        <label asp-for="Motivation">Мотивация</label>
-        <textarea asp-for="Motivation" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Отправить</button>
-</form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const maxAdditionalMembers = 4;
+            const checkboxes = Array.from(document.querySelectorAll('.team-member-checkbox'));
+            const memberCounter = document.getElementById('memberCounter');
+            const teamCounter = document.getElementById('teamCounter');
+
+            function updateCounters(changedCheckbox) {
+                const checked = checkboxes.filter(checkbox => checkbox.checked);
+                if (changedCheckbox && checked.length > maxAdditionalMembers) {
+                    changedCheckbox.checked = false;
+                    alert('Можно выбрать только до 4 дополнительных участников. Вместе с капитаном — максимум 5 человек.');
+                }
+
+                const selectedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+                if (memberCounter) {
+                    memberCounter.textContent = selectedCount.toString();
+                }
+                if (teamCounter) {
+                    teamCounter.textContent = (selectedCount + 1).toString();
+                }
+            }
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    updateCounters(checkbox);
+                });
+            });
+
+            updateCounters();
+        })();
+    </script>
+}

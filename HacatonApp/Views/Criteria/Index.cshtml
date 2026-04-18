@@ -1,0 +1,106 @@
+@model CriteriaConstructorViewModel
+@{
+    ViewData["Title"] = "Конструктор критериев";
+    var isEditMode = Model.Form.Id.HasValue;
+}
+
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="h3 fw-bold mb-3">Конструктор критериев</h1>
+                    <p class="text-secondary mb-4">Создавайте критерии, задавайте вес и максимальный балл. Изменения автоматически влияют на средний балл проекта и лидерборд.</p>
+
+                    <form asp-action="Save" method="post">
+                        @Html.AntiForgeryToken()
+                        <input asp-for="Form.Id" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Form.Name" class="form-label fw-semibold">Название критерия</label>
+                            <input asp-for="Form.Name" class="form-control" placeholder="Например, Инновационность" />
+                            <span asp-validation-for="Form.Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Form.MaxScore" class="form-label fw-semibold">Максимальный балл</label>
+                                <input asp-for="Form.MaxScore" class="form-control" type="number" min="1" step="0.1" />
+                                <span asp-validation-for="Form.MaxScore" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Form.Weight" class="form-label fw-semibold">Вес</label>
+                                <input asp-for="Form.Weight" class="form-control" type="number" min="0.1" step="0.1" />
+                                <span asp-validation-for="Form.Weight" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">@(isEditMode ? "Сохранить изменения" : "Добавить критерий")</button>
+                            @if (isEditMode)
+                            {
+                                <a asp-action="Index" class="btn btn-outline-secondary">Отмена</a>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="h4 fw-bold mb-0">Текущие критерии</h2>
+                        <span class="badge bg-light text-dark">@Model.Items.Count</span>
+                    </div>
+
+                    @if (!Model.Items.Any())
+                    {
+                        <div class="alert alert-info mb-0">Критерии пока не добавлены.</div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Название</th>
+                                        <th>Макс. балл</th>
+                                        <th>Вес</th>
+                                        <th class="text-end">Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td class="fw-semibold">@item.Name</td>
+                                            <td>@item.MaxScore</td>
+                                            <td>@item.Weight</td>
+                                            <td class="text-end">
+                                                <div class="d-inline-flex gap-2">
+                                                    <a asp-action="Index" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Изменить</a>
+                                                    <form asp-action="Delete" method="post" class="d-inline">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@item.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,64 @@
+@using System.Linq
+@model List<ProjectLeaderboardItemViewModel>
+@{
+    ViewData["Title"] = "Лидерборд";
+}
+
+<div class="container py-5">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-2">Лидерборд проектов</h1>
+            <p class="text-secondary mb-0">Средний балл проекта считается по оценкам судей и автоматически обновляется после каждой оценки.</p>
+        </div>
+        <a asp-controller="Projects" asp-action="Index" class="btn btn-outline-primary">Все проекты</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Пока нет проектов в лидерборде.</div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Место</th>
+                            <th>Проект</th>
+                            <th>Команда</th>
+                            <th>Участники</th>
+                            <th>Оценок</th>
+                            <th class="text-end">Средний балл</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">#@item.Rank</td>
+                                <td>
+                                    <div class="fw-semibold">@item.ProjectName</div>
+                                    <div class="text-secondary small">@item.ProjectDescription</div>
+                                </td>
+                                <td>@item.TeamName</td>
+                                <td>
+                                    @if (item.Members.Any())
+                                    {
+                                        <span class="small">@string.Join(", ", item.Members.Select(member => member.FullName))</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-secondary small">Нет участников</span>
+                                    }
+                                </td>
+                                <td>@item.ReviewsCount</td>
+                                <td class="text-end fw-bold">@item.AverageScore.ToString("0.##") / 100</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

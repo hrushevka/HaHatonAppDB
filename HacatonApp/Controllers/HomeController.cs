@@ -10,6 +10,15 @@ namespace HacatonApp.Controllers
         public IActionResult Index() => View();
 
         [HttpGet]
-        public IActionResult ProjectsList() => View();
+        public IActionResult Projects() => RedirectToAction("Index", "Projects");
+
+        [HttpGet]
+        public IActionResult Privacy() => View();
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

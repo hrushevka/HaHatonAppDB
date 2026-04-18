@@ -1,33 +1,51 @@
-﻿@{
+@{
     ViewData["Title"] = "Админ панель";
 }
 
-<h2>Админ панель</h2>
+<div class="container py-5">
+    <div class="mb-4">
+        <h1 class="display-6 fw-bold mb-2">Панель администратора</h1>
+        <p class="text-secondary mb-0">Управление пользователями, командами, критериями оценки и итоговым рейтингом.</p>
+    </div>
 
-<div class="row mt-4">
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5>Управление пользователями</h5>
-            </div>
-            <div class="card-body">
-                <p>Просмотр и редактирование пользователей, назначение ролей</p>
-                <a asp-action="Users" class="btn btn-primary">Перейти к пользователям</a>
-            </div>
-            <div class="card-body">
-                <p>Просмотр заявок на Жюри</p>
-                <a asp-action="Zaiavki" class="btn btn-primary">Перейти к заявкам</a>
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold mb-3">Пользователи</h2>
+                    <p class="text-secondary small">Просмотр всех зарегистрированных пользователей и редактирование ролей.</p>
+                    <a asp-action="Users" class="btn btn-primary w-100">Открыть</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5>Информация</h5>
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold mb-3">Заявки жюри</h2>
+                    <p class="text-secondary small">Одобрение или отклонение заявок на судейство.</p>
+                    <a asp-action="Zaiavki" class="btn btn-primary w-100">Открыть</a>
+                </div>
             </div>
-            <div class="card-body">
-                <p>Добро пожаловать в панель администратора</p>
-                <p>Вы можете управлять пользователями и их ролями</p>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold mb-3">Заявки команд</h2>
+                    <p class="text-secondary small">Проверка команд, состава участников и создание проекта.</p>
+                    <a asp-action="TeamZaiavki" class="btn btn-primary w-100">Открыть</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold mb-3">Критерии и рейтинг</h2>
+                    <p class="text-secondary small">Конструктор критериев, средний балл проектов и лидерборд.</p>
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Criteria" asp-action="Index" class="btn btn-primary">Критерии</a>
+                        <a asp-controller="Results" asp-action="Index" class="btn btn-outline-primary">Лидерборд</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

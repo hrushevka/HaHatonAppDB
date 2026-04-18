@@ -1,0 +1,53 @@
+@using System.Linq
+@model List<ProjectLeaderboardItemViewModel>
+@{
+    ViewData["Title"] = "Проекты";
+}
+
+<div class="container py-5">
+    <div class="mb-4">
+        <h1 class="display-6 fw-bold mb-2">Проекты хакатона</h1>
+        <p class="text-secondary mb-0">Список всех проектов с текущим средним баллом и составом команды.</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Проекты пока не опубликованы.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <div class="text-secondary small mb-1">Команда: @item.TeamName</div>
+                                    <h2 class="h4 fw-bold mb-0">@item.ProjectName</h2>
+                                </div>
+                                <span class="badge bg-light text-dark">@item.AverageScore.ToString("0.##") / 100</span>
+                            </div>
+
+                            <p class="text-secondary">@item.ProjectDescription</p>
+
+                            <div class="mt-auto pt-3 border-top">
+                                <div class="small text-secondary mb-1">Участники</div>
+                                @if (item.Members.Any())
+                                {
+                                    <div>@string.Join(", ", item.Members.Select(member => member.FullName))</div>
+                                }
+                                else
+                                {
+                                    <div class="text-secondary">Нет данных</div>
+                                }
+                                <div class="small text-secondary mt-3">Оценок: <strong>@item.ReviewsCount</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
