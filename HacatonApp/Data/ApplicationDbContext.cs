@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using HacatonApp.Models;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace HacatonApp.Data
 {
@@ -13,6 +14,7 @@ namespace HacatonApp.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<JuryZaiavka> JuryZaiavkas { get; set; }
         public DbSet<Criteria> Criterias { get; set; }
+        public DbSet<TeamZaiavka> TeamZaiavkas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -132,6 +134,50 @@ namespace HacatonApp.Data
                     .HasMaxLength(200);
 
                 entity.Property(c => c.Weight);
+            });
+
+            // Настройка TeamZaiavka
+            builder.Entity<TeamZaiavka>(entity =>
+            {
+                entity.ToTable("TeamZaiavkas");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+                entity.Property(t => t.TeamName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(t => t.ProjectName)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(t => t.ProjectDescription)
+                    .IsRequired();
+
+                entity.Property(t => t.ContactEmail)
+                    .IsRequired()
+                    .HasMaxLength(256);
+
+                entity.Property(t => t.Motivation)
+                    .HasMaxLength(1000);
+
+                entity.Property(t => t.Status)
+                    .HasDefaultValue("Wait");
+
+                entity.Property(t => t.SubmitedAt)
+                    .HasDefaultValueSql("GETUTCDATE()");
+
+                entity.Property(t => t.AdminComment)
+                    .HasMaxLength(1000);
+
+                entity.Property(t => t.TeamMemberIds)
+                    .HasConversion(
+                        v => string.Join(',', v),
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+                    .Metadata.SetValueComparer(new ValueComparer<List<string>>(
+                        (c1, c2) => c1.SequenceEqual(c2),
+                        c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                        c => c.ToList()));
             });
         }
     }

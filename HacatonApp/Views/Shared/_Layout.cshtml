@@ -48,14 +48,18 @@
                                 <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
                                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Список участников</a></li>
                                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="Zaiavki">Заявки на судейство</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="TeamZaiavki">Заявки комманд</a></li>
                                 </ul>
                             </li>
                         }
                         
-                        @if (!User.IsInRole("Jury") && !User.IsInRole("Teamer") && User.Identity?.IsAuthenticated == true)
+                        @if (!User.IsInRole("Jury") && !User.IsInRole("Admin") && !User.IsInRole("Teamer") && User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
                                 <a class="nav-link px-3" asp-controller="Jury" asp-action="SubmitZaiavka">Стать судьёй</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link px-3" asp-controller="Team" asp-action="SubmitTeamZaiavka">Создать комманду</a>
                             </li>
                         }
                     </ul>

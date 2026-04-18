@@ -157,5 +157,129 @@ namespace HacatonApp.Controllers
             };
             return View(model);
         }
+        // Добавьте эти методы в существующий AdminController
+
+        [HttpGet]
+        public async Task<IActionResult> TeamZaiavki()
+        {
+            var list = await _context.TeamZaiavkas.ToArrayAsync();
+            List<TeamZaiavkaViewModel> listModels = new List<TeamZaiavkaViewModel>();
+
+            for (int i = 0; i < list.Length; i++)
+            {
+                listModels.Add(new TeamZaiavkaViewModel
+                {
+                    ZaiavkaId = list[i].Id,
+                    TeamName = list[i].TeamName,
+                    ProjectName = list[i].ProjectName,
+                    ContactEmail = list[i].ContactEmail
+                });
+            }
+            return View(listModels);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AcceptTeamZaiavka(int id, string? adminComment = null)
+        {
+            var zaiavka = await _context.TeamZaiavkas.FirstOrDefaultAsync(o => o.Id == id);
+            if (zaiavka == null) return NotFound();
+
+            // Создаем команду
+            var team = new Team
+            {
+                Name = zaiavka.TeamName,
+                ContactEmail = zaiavka.ContactEmail
+            };
+
+            var teamResult = await _context.Teams.AddAsync(team);
+            await _context.SaveChangesAsync();
+            var teamId = teamResult.Entity.Id;
+
+            // Создаем проект
+            var project = new Project
+            {
+                Name = zaiavka.ProjectName,
+                Description = zaiavka.ProjectDescription,
+                Score = 0
+            };
+
+            var projectResult = await _context.Projects.AddAsync(project);
+            await _context.SaveChangesAsync();
+
+            // Связываем команду с проектом
+            team.ProjectId = projectResult.Entity.Id;
+            await _context.SaveChangesAsync();
+
+            // Назначаем пользователя, подавшего заявку, капитаном команды
+            var user = await _userManager.FindByIdAsync(zaiavka.UserId);
+            if (user != null)
+            {
+                user.TeamID = teamId;
+                await _userManager.UpdateAsync(user);
+                await _userManager.RemoveFromRoleAsync(user, "Ghost");
+                await _userManager.AddToRoleAsync(user, "Teamer");
+            }
+
+            // Добавляем остальных участников
+            foreach (var memberId in zaiavka.TeamMemberIds)
+            {
+                var member = await _userManager.FindByIdAsync(memberId);
+                if (member != null)
+                {
+                    member.TeamID = teamId;
+                    await _userManager.UpdateAsync(member);
+                    await _userManager.RemoveFromRoleAsync(member, "Ghost");
+                    await _userManager.AddToRoleAsync(member, "Teamer");
+                }
+            }
+
+            zaiavka.ReviewedAt = DateTime.Now;
+            zaiavka.Status = "Accepted";
+            zaiavka.AdminComment = adminComment;
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Заявка команды {zaiavka.TeamName} одобрена!";
+            return RedirectToAction("TeamZaiavki");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectTeamZaiavka(int id, string? adminComment = null)
+        {
+            var zaiavka = await _context.TeamZaiavkas.FirstOrDefaultAsync(o => o.Id == id);
+            if (zaiavka == null) return NotFound();
+
+            zaiavka.ReviewedAt = DateTime.Now;
+            zaiavka.Status = "Denied";
+            zaiavka.AdminComment = adminComment;
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Заявка команды {zaiavka.TeamName} отклонена";
+            return RedirectToAction("TeamZaiavki");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckTeamZaiavka(int id)
+        {
+            var zaiavka = await _context.TeamZaiavkas.FirstOrDefaultAsync(o => o.Id == id);
+            if (zaiavka == null) return NotFound();
+            if (zaiavka.Status != "Wait") return RedirectToAction("TeamZaiavki");
+
+            var model = new TeamZaiavkaViewModel
+            {
+                ZaiavkaId = zaiavka.Id,
+                TeamName = zaiavka.TeamName,
+                ProjectName = zaiavka.ProjectName,
+                ProjectDescription = zaiavka.ProjectDescription,
+                Motivation = zaiavka.Motivation,
+                ContactEmail = zaiavka.ContactEmail,
+                TeamMemberIds = zaiavka.TeamMemberIds
+            };
+
+            return View(model);
+        }
     }
 }

@@ -20,62 +20,40 @@ namespace HacatonApp.Controllers
         {
             return View();
         }
+
         [HttpGet]
-        public IActionResult AddProject() => View();
+        public IActionResult SubmitTeamZaiavka() => View();
+
         [HttpPost]
-        public async Task<IActionResult> AddProject(AddProjectViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitTeamZaiavka(TeamZaiavkaViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var project = new Project
-                {
-                    Name = model.Name,
-                    Description = model.Description
-                };
-                await _context.Projects.AddAsync(project);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("Index");
-        }
+                var userId = _userManager.GetUserId(User);
+                if (userId == null) return NotFound();
 
-        [HttpGet]
-        public IActionResult RegisterTeam() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> RegisterTeam(RegisterTeamViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var capitain = await _userManager.FindByIdAsync(model.CapitainId);
-                if (capitain == null) return NotFound();
-                var team = new Team
+                var zaiavka = new TeamZaiavka
                 {
-                    Name = model.Name,
-                    ContactEmail = capitain.Email
+                    UserId = userId,
+                    TeamName = model.TeamName,
+                    ProjectName = model.ProjectName,
+                    ProjectDescription = model.ProjectDescription,
+                    ContactEmail = model.ContactEmail,
+                    Motivation = model.Motivation,
+                    SubmitedAt = DateTime.Now,
+                    Status = "Wait",
+                    TeamMemberIds = model.TeamMemberIds ?? new List<string>()
                 };
-                var teamObj = await _context.Teams.AddAsync(team);
+
+                await _context.TeamZaiavkas.AddAsync(zaiavka);
                 await _context.SaveChangesAsync();
 
-                var curTeamId = teamObj.Entity.Id;
-
-                var usersIdArray = model.UsersId.ToArray();
-
-                for (int i = 0; i < usersIdArray.Length; i++)
-                {
-                    var user = await _userManager.FindByIdAsync(usersIdArray[i]);
-                    if (user == null) continue;
-                    user.TeamID = curTeamId;
-                    var resultUpd = await _userManager.UpdateAsync(user);
-                    if (resultUpd.Succeeded)
-                    {
-                        await _userManager.AddToRoleAsync(user, "Teamer");
-                        await _userManager.RemoveFromRoleAsync(user, "Ghost");
-                    }
-                    foreach (var error in resultUpd.Errors)
-                        ModelState.AddModelError("", error.Description);
-                }
+                TempData["SuccessMessage"] = "Заявка команды успешно отправлена!";
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+
+            return View(model);
         }
     }
 }

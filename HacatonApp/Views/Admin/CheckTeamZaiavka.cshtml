@@ -1,0 +1,21 @@
+﻿@model TeamZaiavkaViewModel
+@{
+    ViewData["Title"] = "Рассмотр заявки";
+}
+<h2>Заявка команды @Model.TeamName</h2>
+<p>Проект: @Model.ProjectName</p>
+<p>Описание: @Model.ProjectDescription</p>
+<p>Email: @Model.ContactEmail</p>
+<p>Мотивация: @Model.Motivation</p>
+<form asp-action="AcceptTeamZaiavka" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.ZaiavkaId" />
+    <input type="text" name="adminComment" placeholder="Комментарий" />
+    <button type="submit" class="btn btn-primary">Да</button>
+    <a asp-action="TeamZaiavki" class="btn btn-secondary">Назад</a>
+</form>
+<form asp-action="RejectTeamZaiavka" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.ZaiavkaId" />
+    <button type="submit" class="btn btn-danger">Нет</button>
+</form>

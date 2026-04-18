@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HacatonApp.Migrations
 {
     /// <inheritdoc />
-    public partial class Mer : Migration
+    public partial class Ddc : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,29 @@ namespace HacatonApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TeamZaiavkas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TeamName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ProjectName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ProjectDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Motivation = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Wait"),
+                    SubmitedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AdminComment = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    TeamMemberIds = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeamZaiavkas", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -322,6 +345,9 @@ namespace HacatonApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "JuryZaiavkas");
+
+            migrationBuilder.DropTable(
+                name: "TeamZaiavkas");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
