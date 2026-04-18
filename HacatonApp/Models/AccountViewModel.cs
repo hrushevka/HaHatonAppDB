@@ -25,6 +25,7 @@ namespace HacatonApp.Models
     }
     public class ChangeProfileViewModel
     {
+        public string Id { get; set; }
         public required string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public required string Email { get; set; } = string.Empty;

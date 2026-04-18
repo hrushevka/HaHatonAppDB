@@ -86,5 +86,15 @@ namespace HacatonApp.Controllers
 			await _signInManager.SignOutAsync();
 			return RedirectToAction("Index", "Home");
 		}
-	}
+        public async Task<IActionResult> ChangeProfile(ChangeProfileViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.Id);
+			if (user == null) return NotFound();
+			user.Email = model.Email;
+			user.FirstName = model.FirstName;
+			user.LastName = model.LastName;
+            return View(); 
+		}
+
+    }
 }
