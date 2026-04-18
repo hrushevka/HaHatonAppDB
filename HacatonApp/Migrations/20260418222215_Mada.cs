@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HacatonApp.Migrations
 {
     /// <inheritdoc />
-    public partial class Ads : Migration
+    public partial class Mada : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

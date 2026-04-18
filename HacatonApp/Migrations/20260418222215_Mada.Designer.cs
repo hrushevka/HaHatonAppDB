@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HacatonApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260418203935_Ads")]
-    partial class Ads
+    [Migration("20260418222215_Mada")]
+    partial class Mada
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
