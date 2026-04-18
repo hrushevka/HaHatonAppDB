@@ -23,7 +23,7 @@ namespace HacatonApp.Models
     }
     public class JuryZaiavkaViewModel
     {
-        public string ZaiavkaId { get; set; } = string.Empty;
+        public int ZaiavkaId { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string Motivation { get; set; } = string.Empty;

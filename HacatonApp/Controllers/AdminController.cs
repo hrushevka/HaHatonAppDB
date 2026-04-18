@@ -89,8 +89,20 @@ namespace HacatonApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Zaiavki() 
         {
-            var list = await _context.JuryZaiavkas.ToListAsync();
-            return View(list);
+            var list = await _context.JuryZaiavkas.ToArrayAsync();
+            List<JuryZaiavkaViewModel> listModels = new List<JuryZaiavkaViewModel>();
+            for (int i =0; i<list.Length; i++)
+            {
+                listModels.Add(new JuryZaiavkaViewModel
+                {
+                    ZaiavkaId = list[i].Id,
+                    FirstName = list[i].FirstName,
+                    LastName = list[i].LastName,
+                    Motivation = list[i].Motivation,
+                    ContactEmail = list[i].ContactEmail
+                });
+            }
+            return View(listModels);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -110,7 +122,7 @@ namespace HacatonApp.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View();
+            return RedirectToAction("Zaiavki");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -127,14 +139,23 @@ namespace HacatonApp.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View();
+            return RedirectToAction("Zaiavki");
         }
         [HttpGet]
         public async Task<IActionResult> CheckZaiavka(int id)
         {
             var zaiavka = _context.JuryZaiavkas.FirstOrDefault(o => o.Id == id);
             if (zaiavka == null) return NotFound();
-            return View(zaiavka);
+            if (zaiavka.Status != "Wait") return RedirectToAction("Zaiavki");
+            var model = new JuryZaiavkaViewModel
+            {
+                ZaiavkaId = id,
+                FirstName = zaiavka.FirstName,
+                LastName = zaiavka.LastName,
+                Motivation = zaiavka.Motivation,
+                ContactEmail = zaiavka.ContactEmail
+            };
+            return View(model);
         }
     }
 }
