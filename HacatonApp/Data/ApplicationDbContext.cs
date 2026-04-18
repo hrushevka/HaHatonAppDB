@@ -131,8 +131,7 @@ namespace HacatonApp.Data
                     .IsRequired()
                     .HasMaxLength(200);
 
-                entity.Property(c => c.Weight)
-                    .HasPrecision(5, 2);
+                entity.Property(c => c.Weight);
             });
         }
     }
