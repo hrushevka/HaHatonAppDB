@@ -87,7 +87,11 @@ namespace HacatonApp.Controllers
         }
 
         [HttpGet]
-		public IActionResult Zaiavki() => View();
+        public async Task<IActionResult> Zaiavki() 
+        {
+            var list = await _context.JuryZaiavkas.ToListAsync();
+            return View(list);
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> KrutiZaiavky(int id, string? adminComment = null)
