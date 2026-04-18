@@ -1,64 +1,106 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - HacatonApp</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Хакатон</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/HacatonApp.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">HacatonApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    <span class="brand-icon">🚀</span>
+                    <span class="brand-text">Хакатон</span>
+                </a>
+                
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav mx-auto gap-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                               asp-controller="Home" asp-action="Index">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Projects">Проекты</a>
+                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Projects" ? "active" : "")"
+                               asp-controller="Home" asp-action="Projects">Проекты</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Results" ? "active" : "")"
+                               asp-controller="Results" asp-action="Index">Результаты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Teams" ? "active" : "")"
+                               asp-controller="Teams" asp-action="Index">Команды</a>
+                        </li>
+                        
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Users">Сисок участников</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Zaiavki">Заявки на судебство</a>
-                            </li>
-                        }
-                        @if (!User.IsInRole("Jury") && !User.IsInRole("Teamer"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Jury" asp-action="SubmitZaiavka">Подать заявку на судебство</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle px-3" href="#" role="button" data-bs-toggle="dropdown">
+                                    Администрирование
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Список участников</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Zaiavki">Заявки на судейство</a></li>
+                                </ul>
                             </li>
                         }
                         
+                        @if (!User.IsInRole("Jury") && !User.IsInRole("Teamer") && User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link px-3" asp-controller="Jury" asp-action="SubmitZaiavka">Стать судьёй</a>
+                            </li>
+                        }
                     </ul>
+                    
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer mt-auto">
         <div class="container">
-            &copy; 2026 - HacatonApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row align-items-center py-4">
+                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+                        <span class="footer-brand-icon">🚀</span>
+                        <span class="footer-brand-text fw-bold">Хакатон</span>
+                    </div>
+                    <p class="text-secondary small mt-2">Платформа для инноваций и творчества</p>
+                </div>
+                <div class="col-md-4 text-center mb-3 mb-md-0">
+                    <nav class="footer-nav">
+                        <a asp-controller="Home" asp-action="Index" class="footer-link">Главная</a>
+                        <span class="footer-divider">•</span>
+                        <a asp-controller="Home" asp-action="Projects" class="footer-link">Проекты</a>
+                        <span class="footer-divider">•</span>
+                        <a asp-controller="Results" asp-action="Index" class="footer-link">Результаты</a>
+                        <span class="footer-divider">•</span>
+                        <a asp-controller="Teams" asp-action="Index" class="footer-link">Команды</a>
+                    </nav>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <p class="text-secondary small mb-0">
+                        &copy; @DateTime.Now.Year Хакатон<br />
+                        <span class="footer-credit">Создано командой: Хакеры будущего</span>
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
