@@ -1,0 +1,13 @@
+﻿@model JuryZaiavkaViewModel
+@{
+    ViewData["Title"] = "Подача заявки на судью";
+}
+
+<form method="post">
+    <input asp-for"FirstName" type="text" name="name" placeholder="Ваше имя" />
+    <input asp-for"LastName" type="text" name="name" placeholder="Ваша фамилия" />
+    <input asp-for"Motivation" type="text" name="name" placeholder="Почему вам нужно стать судьёй?" />
+    <input asp-for"ContactEmail" type="text" name="name" placeholder="email для свзи" />
+    <button asp-action="SubmitZaiavka" type="submit" class="btn btn-primary mt-3">Отправить</button>
+
+</form>

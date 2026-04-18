@@ -20,20 +20,20 @@ namespace HacatonApp.Controllers
             _userManager = userManager;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> RateProject(int id)
-        {
+        //[HttpGet]
+        //public async Task<IActionResult> RateProject(int id)
+        //{
             
-            var criterias = await _context.Criterias.ToListAsync();
-            string criteriasJson = JsonConverter.SeriliaseObject(criterias),
-            RateProjectWithCriteriaToViewModel model = new RateProjectWithCriteriaToViewModel
-            {
-                criteriasJson
+        //    var criterias = await _context.Criterias.ToListAsync();
+        //    string criteriasJson = JsonConverter.SeriliaseObject(criterias),
+        //    RateProjectWithCriteriaToViewModel model = new RateProjectWithCriteriaToViewModel
+        //    {
+        //        criteriasJson
 
-            };
+        //    };
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         [HttpGet]
         public IActionResult SubmitZaiavka() => View();
