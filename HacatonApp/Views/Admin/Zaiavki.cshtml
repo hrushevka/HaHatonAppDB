@@ -1,0 +1,33 @@
+﻿@model List<JuryZaiavkaViewModel>
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<h2>Управление пользователями</h2>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Фамили</th>
+            <th>Причина</th>
+            <th>Email</th>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Motivation</td>
+                <td>@user.ContactEmail</td>
+                <td>
+                    <a asp-action="CheckZaiavka" asp-route-id="@user.ZaiavkaId" class="btn btn-warning btn-sm">
+                        Перейти к рассмотру
+                    </a>
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>

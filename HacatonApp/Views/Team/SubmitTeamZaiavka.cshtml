@@ -1,0 +1,28 @@
+﻿@model TeamZaiavkaViewModel
+@{
+    ViewData["Title"] = "Подать заявку";
+}
+<h2>Заявка команды</h2>
+<form asp-action="SubmitTeamZaiavka" method="post">
+    <div class="form-group">
+        <label asp-for="TeamName">Команда</label>
+        <input asp-for="TeamName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ProjectName">Проект</label>
+        <input asp-for="ProjectName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ProjectDescription">Описание</label>
+        <textarea asp-for="ProjectDescription" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="ContactEmail">Email</label>
+        <input asp-for="ContactEmail" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Motivation">Мотивация</label>
+        <textarea asp-for="Motivation" class="form-control"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+</form>

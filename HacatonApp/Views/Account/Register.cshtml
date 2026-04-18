@@ -1,0 +1,125 @@
+﻿
+@model RegisterUserViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<style>
+    .auth-container {
+        max-width: 500px;
+        margin: 3rem auto;
+    }
+    .auth-card {
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .auth-card-body {
+        padding: 2rem;
+    }
+    .btn-primary {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+        padding: 0.75rem;
+        font-size: 1rem;
+    }
+    .btn-primary:hover {
+        background-color: #1557b0;
+        border-color: #1557b0;
+    }
+    .error-message {
+        background-color: #f8d7da;
+        color: #842029;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+    }
+    .form-control {
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+    }
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 0.3rem;
+    }
+    .login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #dee2e6;
+    }
+    .login-link a {
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="text-center mb-4">
+        <h1 class="display-6 fw-bold mb-2">Регистрация</h1>
+        <p class="text-secondary">Создайте аккаунт для участия в хакатоне</p>
+    </div>
+
+    <div class="auth-card">
+        <div class="auth-card-body">
+            <form method="post" asp-action="Register">
+                <div asp-validation-summary="ModelOnly" class="error-message"></div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="FirstName" class="form-label">Имя</label>
+                        <input asp-for="FirstName" class="form-control" placeholder="Иван" />
+                        <span asp-validation-for="FirstName" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="LastName" class="form-label">Фамилия</label>
+                        <input asp-for="LastName" class="form-control" placeholder="Иванов" />
+                        <span asp-validation-for="LastName" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="your@email.com" />
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Password" class="form-label">Пароль</label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmPassword" class="form-label">Подтверждение</label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="••••••••" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="TermsAccepted" class="form-check-input" />
+                    <label asp-for="TermsAccepted" class="form-check-label">
+                        Я принимаю условия использования
+                    </label>
+                    <span asp-validation-for="TermsAccepted" class="text-danger small d-block"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+            </form>
+
+            <div class="login-link">
+                <a asp-action="Login">← Уже есть аккаунт? Войти</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

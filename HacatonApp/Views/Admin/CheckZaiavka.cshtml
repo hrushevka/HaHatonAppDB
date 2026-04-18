@@ -1,0 +1,22 @@
+﻿@model JuryZaiavkaViewModel
+@{
+    ViewData["Title"] = "Рассмотр заявки на судью";
+}
+
+<h2>Принятие заявки на судью для @Model.FirstName @Model.LastName</h2>
+<p>Email для связи: @Model.ContactEmail</p>
+
+<form asp-action="KrutiZaiavky" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.ZaiavkaId" />
+    <input type="text" name="adminComment" placeholder="Ваш комментарий" />
+    <button type="submit" class="btn btn-primary mt-3">Да</button>
+    <a asp-action="Zaiavki" class="btn btn-secondary mt-3">Назад</a>
+</form>
+
+<form asp-action="PlohoZaiavky" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.ZaiavkaId" />
+    <input type="text" name="adminComment" placeholder="Ваш комментарий" />
+    <button type="submit" class="btn btn-danger mt-3">Нет</button>
+</form>
