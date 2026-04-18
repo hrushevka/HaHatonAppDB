@@ -6,15 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HacatonApp.Controllers
 {
-	public class AdminController : Controller
-	{
+    public class AdminController : Controller
+    {
         private ApplicationDbContext _context;
         private UserManager<ApplicationUser> _userManager;
+
         public AdminController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
+
         [HttpGet]
         public IActionResult Index() => View();
 
@@ -87,13 +89,19 @@ namespace HacatonApp.Controllers
         }
 
         [HttpGet]
-		public IActionResult Zaiavki() => View();
+        public async Task<IActionResult> Zaiavki()
+        {
+            var zaiavkas = await _context.JuryZaiavkas.ToListAsync();
+            return View(zaiavkas);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> KrutiZaiavky(int id, string? adminComment = null)
         {
             var zaiavka = await _context.JuryZaiavkas.FirstOrDefaultAsync(o => o.Id == id);
             if (zaiavka == null) return NotFound();
+
             var user = await _userManager.FindByIdAsync(zaiavka.UserId);
             if (user == null) return NotFound();
 
@@ -106,14 +114,17 @@ namespace HacatonApp.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View();
+            TempData["SuccessMessage"] = "Заявка одобрена!";
+            return RedirectToAction("Zaiavki");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PlohoZaiavky(int id, string? adminComment = null)
         {
             var zaiavka = await _context.JuryZaiavkas.FirstOrDefaultAsync(o => o.Id == id);
             if (zaiavka == null) return NotFound();
+
             var user = await _userManager.FindByIdAsync(zaiavka.UserId);
             if (user == null) return NotFound();
 
@@ -123,12 +134,14 @@ namespace HacatonApp.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View();
+            TempData["ErrorMessage"] = "Заявка отклонена!";
+            return RedirectToAction("Zaiavki");
         }
+
         [HttpGet]
         public async Task<IActionResult> CheckZaiavka(int id)
         {
-            var zaiavka = _context.JuryZaiavkas.FirstOrDefault(o => o.Id == id);
+            var zaiavka = await _context.JuryZaiavkas.FirstOrDefaultAsync(o => o.Id == id);
             if (zaiavka == null) return NotFound();
             return View(zaiavka);
         }

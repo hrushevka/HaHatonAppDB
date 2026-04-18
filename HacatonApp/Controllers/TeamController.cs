@@ -1,9 +1,7 @@
 ﻿using HacatonApp.Data;
 using HacatonApp.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices.JavaScript;
+using Microsoft.AspNetCore.Identity;
 
 namespace HacatonApp.Controllers
 {
@@ -11,17 +9,21 @@ namespace HacatonApp.Controllers
     {
         private UserManager<ApplicationUser> _userManager;
         private ApplicationDbContext _context;
+
         public TeamController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
+
         public IActionResult Index()
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult AddProject() => View();
+
         [HttpPost]
         public async Task<IActionResult> AddProject(AddProjectViewModel model)
         {
@@ -34,6 +36,7 @@ namespace HacatonApp.Controllers
                 };
                 await _context.Projects.AddAsync(project);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Проект добавлен!";
             }
             return RedirectToAction("Index");
         }
@@ -48,6 +51,7 @@ namespace HacatonApp.Controllers
             {
                 var capitain = await _userManager.FindByIdAsync(model.CapitainId);
                 if (capitain == null) return NotFound();
+
                 var team = new Team
                 {
                     Name = model.Name,
@@ -64,18 +68,27 @@ namespace HacatonApp.Controllers
                 {
                     var user = await _userManager.FindByIdAsync(usersIdArray[i]);
                     if (user == null) continue;
+
                     user.TeamID = curTeamId;
                     var resultUpd = await _userManager.UpdateAsync(user);
+
                     if (resultUpd.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, "Teamer");
                         await _userManager.RemoveFromRoleAsync(user, "Ghost");
                     }
-                    foreach (var error in resultUpd.Errors)
-                        ModelState.AddModelError("", error.Description);
+                    else
+                    {
+                        foreach (var error in resultUpd.Errors)
+                            ModelState.AddModelError("", error.Description);
+                    }
                 }
+
+                TempData["SuccessMessage"] = "Команда успешно зарегистрирована!";
+                return RedirectToAction("Index", "Home");
             }
-            return RedirectToAction("Index", "Home");
+
+            return View(model);
         }
     }
 }

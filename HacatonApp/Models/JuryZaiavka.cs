@@ -1,4 +1,4 @@
-﻿using HacatonApp.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HacatonApp.Models
 {
@@ -6,29 +6,44 @@ namespace HacatonApp.Models
     {
         Wait, Accepted, Danied
     }
+
     public class JuryZaiavka
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public required string  FirstName { get; set; } = string.Empty;
+        public required string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public string FullName => $"{FirstName} {LastName}";
-        public string Motivation { get; set; } = string.Empty; 
+        public string Motivation { get; set; } = string.Empty;
         public required string ContactEmail { get; set; } = string.Empty;
-
         public string Status { get; set; } = "Wait";
         public DateTime SubmitedAt { get; set; }
         public DateTime? ReviewedAt { get; set; }
         public string? AdminComment { get; set; }
     }
+
     public class JuryZaiavkaViewModel
     {
         public string ZaiavkaId { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Введите имя")]
+        [Display(Name = "Имя")]
         public string FirstName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Введите фамилию")]
+        [Display(Name = "Фамилия")]
         public string LastName { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Опишите мотивацию")]
+        [Display(Name = "Мотивация")]
         public string Motivation { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Введите email")]
+        [EmailAddress(ErrorMessage = "Неверный формат email")]
+        [Display(Name = "Email для связи")]
         public string ContactEmail { get; set; } = string.Empty;
     }
+
     public class RateProjectWithCriteriaToViewModel
     {
         public List<string> Criterias { get; set; }

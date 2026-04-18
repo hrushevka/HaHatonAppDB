@@ -60,13 +60,13 @@ namespace HacatonApp.Controllers
                 return View(model);
             }
 
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,  // ЭТО КРИТИЧЕСКИ ВАЖНО!
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-            };
+var user = new ApplicationUser
+{
+    UserName = model.Email,  // ЭТО КРИТИЧЕСКИ ВАЖНО!
+    Email = model.Email,
+    FirstName = model.FirstName,
+    LastName = model.LastName,
+};
 
             var result = await _userManager.CreateAsync(user, model.Password);
 

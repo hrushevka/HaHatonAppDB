@@ -3,12 +3,57 @@
     ViewData["Title"] = "Подача заявки на судью";
 }
 
-<form method="post">
-    <input type="hidden" asp-for="ZaiavkaId" />
-    <input asp-for="FirstName" type="text" name="name" placeholder="Ваше имя" />
-    <input asp-for="LastName" type="text" name="name" placeholder="Ваша фамилия" />
-    <input asp-for="Motivation" type="text" name="name" placeholder="Почему вам нужно стать судьёй?" />
-    <input asp-for="ContactEmail" type="text" name="name" placeholder="email для свзи" />
-    <button asp-action="SubmitZaiavka" type="submit" class="btn btn-primary mt-3">Отправить</button>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Заявка на участие в жюри</h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+                    
+                    <form method="post" asp-action="SubmitZaiavka">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="FirstName" class="form-label"></label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="Motivation" class="form-label"></label>
+                            <textarea asp-for="Motivation" class="form-control" rows="5"></textarea>
+                            <span asp-validation-for="Motivation" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label asp-for="ContactEmail" class="form-label"></label>
+                            <input asp-for="ContactEmail" class="form-control" type="email" />
+                            <span asp-validation-for="ContactEmail" class="text-danger"></span>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Отправить заявку</button>
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Отмена</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
