@@ -1,4 +1,43 @@
-﻿<!DOCTYPE html>
+@using System
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    string IsActive(params string[] controllers) => Array.Exists(controllers, controller => string.Equals(controller, currentController, StringComparison.OrdinalIgnoreCase))
+        ? "active"
+        : string.Empty;
+
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var mobileExtraController = "Account";
+    var mobileExtraAction = isAuthenticated ? "ChangeProfile" : "Login";
+    var mobileExtraLabel = isAuthenticated ? "Профиль" : "Вход";
+    var mobileExtraIcon = isAuthenticated ? "👤" : "🔐";
+
+    if (User.IsInRole("Admin"))
+    {
+        mobileExtraController = "Admin";
+        mobileExtraAction = "Index";
+        mobileExtraLabel = "Админ";
+        mobileExtraIcon = "⚙️";
+    }
+    else if (User.IsInRole("Jury"))
+    {
+        mobileExtraController = "Jury";
+        mobileExtraAction = "Index";
+        mobileExtraLabel = "Оценка";
+        mobileExtraIcon = "🧑‍⚖️";
+    }
+    else if (isAuthenticated && !User.IsInRole("Teamer"))
+    {
+        mobileExtraController = "Team";
+        mobileExtraAction = "SubmitTeamZaiavka";
+        mobileExtraLabel = "Создать";
+        mobileExtraIcon = "➕";
+    }
+
+    var mobileExtraActiveClass = User.IsInRole("Admin")
+        ? IsActive("Admin", "Criteria")
+        : IsActive(mobileExtraController);
+}
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
@@ -8,102 +47,123 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
                 <a class="navbar-brand fw-bold d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
-                    <span class="brand-icon">🚀</span>
-                    <span class="brand-text">Хакатон</span>
+                    <span>🚀</span>
+                    <span>Хакатон</span>
                 </a>
-                
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Переключить навигацию">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav mx-auto gap-1">
-                        <li class="nav-item">
-                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                               asp-controller="Home" asp-action="Index">Главная</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Projects" ? "active" : "")"
-                               asp-controller="Home" asp-action="Projects">Проекты</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Results" ? "active" : "")"
-                               asp-controller="Results" asp-action="Index">Результаты</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link px-3 @(ViewContext.RouteData.Values["controller"]?.ToString() == "Teams" ? "active" : "")"
-                               asp-controller="Teams" asp-action="Index">Команды</a>
-                        </li>
-                        
+
+                <div class="collapse navbar-collapse site-nav-panel" id="navbarContent">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-link @IsActive("Home")" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="nav-item"><a class="nav-link @IsActive("Projects")" asp-controller="Projects" asp-action="Index">Проекты</a></li>
+                        <li class="nav-item"><a class="nav-link @IsActive("Teams")" asp-controller="Teams" asp-action="Index">Команды</a></li>
+                        <li class="nav-item"><a class="nav-link @IsActive("Results")" asp-controller="Results" asp-action="Index">Лидерборд</a></li>
+
+                        @if (User.IsInRole("Jury") || User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a class="nav-link @IsActive("Jury")" asp-controller="Jury" asp-action="Index">Оценка проектов</a></li>
+                        }
+
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle px-3" href="#" role="button" data-bs-toggle="dropdown">
-                                    Администрирование
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Список участников</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Zaiavki">Заявки на судейство</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="TeamZaiavki">Заявки комманд</a></li>
+                                <a class="nav-link dropdown-toggle @IsActive("Admin", "Criteria")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Администрирование</a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Панель администратора</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Пользователи</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Zaiavki">Заявки жюри</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="TeamZaiavki">Заявки команд</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Criteria" asp-action="Index">Конструктор критериев</a></li>
                                 </ul>
                             </li>
                         }
-                        
-                        @if (!User.IsInRole("Jury") && !User.IsInRole("Admin") && !User.IsInRole("Teamer") && User.Identity?.IsAuthenticated == true)
+
+                        @if (!User.IsInRole("Jury") && !User.IsInRole("Admin") && !User.IsInRole("Teamer") && isAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link px-3" asp-controller="Jury" asp-action="SubmitZaiavka">Стать судьёй</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link px-3" asp-controller="Team" asp-action="SubmitTeamZaiavka">Создать комманду</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link @IsActive("Jury")" asp-controller="Jury" asp-action="SubmitZaiavka">Стать судьёй</a></li>
+                            <li class="nav-item"><a class="nav-link @IsActive("Team")" asp-controller="Team" asp-action="SubmitTeamZaiavka">Создать команду</a></li>
                         }
                     </ul>
-                    
+
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
 
-    <main role="main">
+    <main role="main" class="site-main">
+        <div class="container site-flash-container pt-4">
+            @if (TempData["SuccessMessage"] is string successMessage && !string.IsNullOrWhiteSpace(successMessage))
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    @successMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] is string errorMessage && !string.IsNullOrWhiteSpace(errorMessage))
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    @errorMessage
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
+                </div>
+            }
+        </div>
+
         @RenderBody()
     </main>
 
     <footer class="footer mt-auto">
-        <div class="container">
-            <div class="row align-items-center py-4">
-                <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
-                    <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-                        <span class="footer-brand-icon">🚀</span>
-                        <span class="footer-brand-text fw-bold">Хакатон</span>
-                    </div>
-                    <p class="text-secondary small mt-2">Платформа для инноваций и творчества</p>
+        <div class="container py-4">
+            <div class="row align-items-center g-3">
+                <div class="col-md-4 text-center text-md-start">
+                    <div class="fw-bold">🚀 Хакатон</div>
+                    <div class="text-secondary small">Платформа для команд, жюри и прозрачного лидерборда.</div>
                 </div>
-                <div class="col-md-4 text-center mb-3 mb-md-0">
-                    <nav class="footer-nav">
-                        <a asp-controller="Home" asp-action="Index" class="footer-link">Главная</a>
-                        <span class="footer-divider">•</span>
-                        <a asp-controller="Home" asp-action="Projects" class="footer-link">Проекты</a>
-                        <span class="footer-divider">•</span>
-                        <a asp-controller="Results" asp-action="Index" class="footer-link">Результаты</a>
-                        <span class="footer-divider">•</span>
-                        <a asp-controller="Teams" asp-action="Index" class="footer-link">Команды</a>
-                    </nav>
+                <div class="col-md-4 text-center">
+                    <a asp-controller="Home" asp-action="Index" class="text-decoration-none text-secondary">Главная</a>
+                    <span class="mx-2 text-secondary">•</span>
+                    <a asp-controller="Projects" asp-action="Index" class="text-decoration-none text-secondary">Проекты</a>
+                    <span class="mx-2 text-secondary">•</span>
+                    <a asp-controller="Teams" asp-action="Index" class="text-decoration-none text-secondary">Команды</a>
+                    <span class="mx-2 text-secondary">•</span>
+                    <a asp-controller="Results" asp-action="Index" class="text-decoration-none text-secondary">Лидерборд</a>
                 </div>
-                <div class="col-md-4 text-center text-md-end">
-                    <p class="text-secondary small mb-0">
-                        &copy; @DateTime.Now.Year Хакатон<br />
-                        <span class="footer-credit">Создано командой: Хакеры будущего</span>
-                    </p>
+                <div class="col-md-4 text-center text-md-end text-secondary small">
+                    &copy; @DateTime.Now.Year Хакатон
                 </div>
             </div>
         </div>
     </footer>
+
+    <nav class="mobile-bottom-nav" aria-label="Мобильная навигация">
+        <a asp-controller="Home" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Home")">
+            <span class="mobile-bottom-nav__icon">🏠</span>
+            <span>Главная</span>
+        </a>
+        <a asp-controller="Projects" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Projects")">
+            <span class="mobile-bottom-nav__icon">💡</span>
+            <span>Проекты</span>
+        </a>
+        <a asp-controller="Teams" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Teams")">
+            <span class="mobile-bottom-nav__icon">👥</span>
+            <span>Команды</span>
+        </a>
+        <a asp-controller="Results" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Results")">
+            <span class="mobile-bottom-nav__icon">🏆</span>
+            <span>Рейтинг</span>
+        </a>
+        <a asp-controller="@mobileExtraController" asp-action="@mobileExtraAction" class="mobile-bottom-nav__link @mobileExtraActiveClass">
+            <span class="mobile-bottom-nav__icon">@mobileExtraIcon</span>
+            <span>@mobileExtraLabel</span>
+        </a>
+    </nav>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

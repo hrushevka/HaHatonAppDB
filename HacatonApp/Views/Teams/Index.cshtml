@@ -1,0 +1,60 @@
+@using System.Linq
+@model List<TeamCatalogItemViewModel>
+@{
+    ViewData["Title"] = "Команды";
+}
+
+<div class="container py-5">
+    <div class="mb-4">
+        <h1 class="display-6 fw-bold mb-2">Команды хакатона</h1>
+        <p class="text-secondary mb-0">Состав команд, их проекты и текущий средний балл.</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Команды пока не созданы.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <h2 class="h4 fw-bold mb-1">@item.TeamName</h2>
+                                    <div class="text-secondary small">Проект: @item.ProjectName</div>
+                                </div>
+                                <span class="badge bg-light text-dark">@item.AverageScore.ToString("0.##") / 100</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="small text-secondary mb-1">Контактный email</div>
+                                <div>@item.ContactEmail</div>
+                            </div>
+
+                            <div>
+                                <div class="small text-secondary mb-1">Участники</div>
+                                @if (item.Members.Any())
+                                {
+                                    <ul class="mb-0 ps-3">
+                                        @foreach (var member in item.Members)
+                                        {
+                                            <li>@member.FullName</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <div class="text-secondary">Нет участников</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

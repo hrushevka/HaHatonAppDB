@@ -1,29 +1,35 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @using HacatonApp.Models
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+@{
+    ApplicationUser? currentUser = null;
+    var displayName = string.Empty;
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        currentUser = await UserManager.GetUserAsync(User);
+        displayName = !string.IsNullOrWhiteSpace(currentUser?.FirstName)
+            ? currentUser!.FirstName
+            : UserManager.GetUserName(User) ?? "Профиль";
+    }
+}
+
 @if (SignInManager.IsSignedIn(User))
 {
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
-        <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile" title="Manage">Привет, @UserManager.GetUserName(User)!</a>
-            </li>
-            <li class="nav-item">
-                <button type="submit" class="btn btn-link nav-link text-dark">Выйти</button>
-            </li>
-        </ul>
+    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="site-auth-actions">
+        <a class="nav-link site-user-chip" asp-area="" asp-controller="Account" asp-action="ChangeProfile" title="Профиль">
+            <span class="site-user-chip__label">👤</span>
+            <span class="site-user-chip__text">@displayName</span>
+        </a>
+        <button type="submit" class="btn btn-link nav-link site-logout-link p-0">Выйти</button>
     </form>
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
-        </li>
-    </ul>
+    <div class="site-auth-actions">
+        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Регистрация</a>
+        <a class="btn btn-primary btn-sm px-3" asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
+    </div>
 }

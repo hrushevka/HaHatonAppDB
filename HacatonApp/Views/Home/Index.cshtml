@@ -1,221 +1,136 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-    var currentUser = Context.Session.GetString("UserRole");
-    bool isAuthenticated = !string.IsNullOrEmpty(currentUser);
-    string userRole = currentUser ?? "";
+@{
+    ViewData["Title"] = "Хакатон";
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
 }
 
 <style>
-    .hero-icon {
-        width: 80px;
-        height: 80px;
-        background-color: #e8f0fe;
-        color: #1a73e8;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        font-size: 2.5rem;
+    .hero-card {
+        border: 0;
+        border-radius: 28px;
+        background: linear-gradient(135deg, #f4f8ff, #ffffff);
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
     }
+
     .feature-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-        border: 2px solid rgba(0,0,0,0.05);
-        height: 100%;
+        border: 0;
+        border-radius: 22px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
     .feature-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        border-color: #1a73e8;
+        transform: translateY(-4px);
+        box-shadow: 0 16px 32px rgba(15, 23, 42, 0.1);
     }
+
     .feature-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
-        display: flex;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1.5rem;
         font-size: 1.5rem;
-    }
-    .icon-accent {
-        background-color: #e8f0fe;
+        background: #e8f0fe;
         color: #1a73e8;
+        margin-bottom: 1rem;
     }
-    .icon-secondary {
-        background-color: #1a73e8;
-        color: white;
-    }
-    .about-section {
-        background-color: #f8f9fa;
-        border-radius: 16px;
-        padding: 2.5rem;
-    }
-    .quick-link-card {
-        transition: box-shadow 0.2s;
-        border: none;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .quick-link-card:hover {
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-    .btn-accent {
-        background-color: #e8f0fe;
-        color: #1a73e8;
-        border: none;
-    }
-    .btn-accent:hover {
-        background-color: #d2e3fc;
-        color: #1a73e8;
-    }
-    .btn-secondary-solid {
-        background-color: #1a73e8;
-        color: white;
-        border: none;
-    }
-    .btn-secondary-solid:hover {
-        background-color: #1557b0;
-        color: white;
+
+    @@media (max-width: 767.98px) {
+        .hero-card {
+            border-radius: 22px;
+        }
+
+        .hero-actions {
+            flex-direction: column;
+        }
+
+        .hero-actions .btn {
+            width: 100%;
+        }
     }
 </style>
 
-<div class="container my-5">
-    
-    <div class="text-center py-5">
-        <div class="hero-icon">🚀</div>
-        <h1 class="display-4 fw-bold mb-3">Добро пожаловать на Хакатон!</h1>
-        <p class="lead text-secondary mx-auto" style="max-width: 700px;">
-            Платформа для участия в хакатоне, оценки проектов и подведения итогов
-        </p>
-        
-        @if (!isAuthenticated)
-        {
-            <div class="d-flex gap-3 justify-content-center mt-5">
-                <a asp-controller="Account" asp-action="Login" class="btn btn-secondary-solid btn-lg px-4 py-2">
-                    Войти в систему
-                </a>
-                <a asp-controller="Results" asp-action="Index" class="btn btn-outline-primary btn-lg px-4 py-2">
-                    Посмотреть результаты
-                </a>
-            </div>
-        }
-    </div>
-
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="card feature-card p-4">
-                <div class="feature-icon icon-accent">👥</div>
-                <h3 class="h4 fw-bold mb-3">Для команд</h3>
-                <p class="text-secondary">
-                    Регистрируйтесь, добавляйте описание проекта, ссылки на GitHub и файлы
+<div class="container py-5">
+    <div class="hero-card p-4 p-lg-5 mb-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <div class="display-6 fw-bold mb-3">Платформа хакатона для команд, жюри и администраторов</div>
+                <p class="lead text-secondary mb-4">
+                    Собирайте команды до 5 человек, отправляйте проекты, создавайте критерии оценки,
+                    выставляйте баллы по критериям и следите за лидербордом в реальном времени.
                 </p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card feature-card p-4">
-                <div class="feature-icon icon-secondary">🏆</div>
-                <h3 class="h4 fw-bold mb-3">Для экспертов</h3>
-                <p class="text-secondary">
-                    Оценивайте проекты команд по критериям и оставляйте комментарии
-                </p>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card feature-card p-4">
-                <div class="feature-icon icon-accent">🏅</div>
-                <h3 class="h4 fw-bold mb-3">Итоги</h3>
-                <p class="text-secondary">
-                    Следите за рейтингом команд и результатами оценки экспертов
-                </p>
-            </div>
-        </div>
-    </div>
 
-    <div class="about-section mb-5">
-        <h2 class="h2 fw-bold mb-3">О платформе</h2>
-        <p class="text-secondary mb-4" style="line-height: 1.7;">
-            Эта платформа создана для организации и проведения хакатонов. Команды могут
-            зарегистрироваться, добавить информацию о своих проектах, а эксперты - оценить
-            их работу по нескольким критериям. Все участники могут следить за итоговыми
-            результатами в реальном времени.
-        </p>
-        <div class="d-flex align-items-center gap-2">
-            <span class="rounded-circle bg-primary" style="width: 8px; height: 8px;"></span>
-            <span class="fw-medium">Создано командой: Хакеры будущего</span>
-        </div>
-    </div>
-
-    @if (isAuthenticated)
-    {
-        <div class="mb-5">
-            <h2 class="h2 fw-bold mb-4">Быстрые ссылки</h2>
-            
-            @if (userRole == "team")
-            {
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="card quick-link-card p-4">
-                            <h3 class="h5 fw-bold mb-2">Профиль команды</h3>
-                            <p class="text-secondary small mb-4">
-                                Добавьте информацию о вашем проекте
-                            </p>
-                            <a asp-controller="TeamProfile" asp-action="Index" class="btn btn-primary w-100">
-                                Редактировать профиль
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card quick-link-card p-4">
-                            <h3 class="h5 fw-bold mb-2">Мои оценки</h3>
-                            <p class="text-secondary small mb-4">
-                                Посмотрите оценки экспертов
-                            </p>
-                            <a asp-controller="MyRatings" asp-action="Index" class="btn btn-secondary-solid w-100">
-                                Посмотреть оценки
-                            </a>
-                        </div>
+                <div class="d-flex flex-wrap gap-3 hero-actions">
+                    @if (!isAuthenticated)
+                    {
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4">Регистрация</a>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg px-4">Вход</a>
+                        <a asp-controller="Results" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Лидерборд</a>
+                    }
+                    else if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Admin" asp-action="Index" class="btn btn-primary btn-lg px-4">Админ панель</a>
+                        <a asp-controller="Criteria" asp-action="Index" class="btn btn-outline-primary btn-lg px-4">Критерии</a>
+                        <a asp-controller="Results" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Лидерборд</a>
+                    }
+                    else if (User.IsInRole("Jury"))
+                    {
+                        <a asp-controller="Jury" asp-action="Index" class="btn btn-primary btn-lg px-4">Оценивать проекты</a>
+                        <a asp-controller="Results" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Лидерборд</a>
+                    }
+                    else if (User.IsInRole("Teamer"))
+                    {
+                        <a asp-controller="Teams" asp-action="Index" class="btn btn-primary btn-lg px-4">Команды</a>
+                        <a asp-controller="Projects" asp-action="Index" class="btn btn-outline-primary btn-lg px-4">Проекты</a>
+                        <a asp-controller="Results" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Лидерборд</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Team" asp-action="SubmitTeamZaiavka" class="btn btn-primary btn-lg px-4">Создать команду</a>
+                        <a asp-controller="Jury" asp-action="SubmitZaiavka" class="btn btn-outline-primary btn-lg px-4">Стать судьёй</a>
+                        <a asp-controller="Results" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Лидерборд</a>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="small text-secondary mb-2">Что уже поддерживается</div>
+                        <ul class="mb-0 ps-3">
+                            <li>Заявки команд с выбором участников</li>
+                            <li>Конструктор критериев у администратора</li>
+                            <li>Оценка проектов судьями с комментариями</li>
+                            <li>Автоматический подсчёт среднего балла</li>
+                            <li>Публичный лидерборд проектов</li>
+                        </ul>
                     </div>
                 </div>
-            }
-            
-            @if (userRole == "expert")
-            {
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <div class="card quick-link-card p-4">
-                            <h3 class="h5 fw-bold mb-2">Панель эксперта</h3>
-                            <p class="text-secondary small mb-4">
-                                Обзор всех команд и ваших оценок
-                            </p>
-                            <a asp-controller="ExpertDashboard" asp-action="Index" class="btn btn-primary w-100">
-                                Открыть панель
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card quick-link-card p-4">
-                            <h3 class="h5 fw-bold mb-2">Список команд</h3>
-                            <p class="text-secondary small mb-4">
-                                Посмотрите проекты команд
-                            </p>
-                            <a asp-controller="Teams" asp-action="Index" class="btn btn-primary w-100">
-                                Открыть список
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card quick-link-card p-4">
-                            <h3 class="h5 fw-bold mb-2">Оценки</h3>
-                            <p class="text-secondary small mb-4">
-                                Оцените проекты команд
-                            </p>
-                            <a asp-controller="ExpertRating" asp-action="Index" class="btn btn-secondary-solid w-100">
-                                Перейти к оценкам
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            }
+            </div>
         </div>
-    }
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card feature-card h-100 p-4">
+                <div class="feature-icon">👥</div>
+                <h2 class="h4 fw-bold">Команды</h2>
+                <p class="text-secondary mb-0">Собирайте команду до 5 человек, отправляйте заявку и публикуйте проект после одобрения.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card h-100 p-4">
+                <div class="feature-icon">🧑‍⚖️</div>
+                <h2 class="h4 fw-bold">Жюри</h2>
+                <p class="text-secondary mb-0">Оценивайте проекты по заданным критериям, выставляйте баллы и оставляйте комментарии к проекту.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card feature-card h-100 p-4">
+                <div class="feature-icon">🏆</div>
+                <h2 class="h4 fw-bold">Итоги</h2>
+                <p class="text-secondary mb-0">Следите за средним баллом каждого проекта и финальным рейтингом на отдельной странице результатов.</p>
+            </div>
+        </div>
+    </div>
 </div>
