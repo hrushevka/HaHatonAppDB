@@ -1,4 +1,6 @@
-﻿namespace HacatonApp.Models
+﻿using HacatonApp.Models;
+
+namespace HacatonApp.Models
 {
     public enum JuryZaiavkaStatus
     {
@@ -25,5 +27,10 @@
         public string LastName { get; set; } = string.Empty;
         public string Motivation { get; set; } = string.Empty;
         public string ContactEmail { get; set; } = string.Empty;
+    }
+    public class RateProjectWithCriteriaToViewModel
+    {
+        public List<string> Criterias { get; set; }
+        public Project Project { get; set; }
     }
 }

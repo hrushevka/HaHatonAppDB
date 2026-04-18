@@ -34,7 +34,7 @@ namespace HacatonApp.Controllers
         public IActionResult Register() => View();
 		public async Task<IActionResult> Register(RegisterUserViewModel model)
 		{
-			if (!model.TermsAccepted)
+			if (!model.TermsAccepted || model.Password != model.ConfirmPassword)
 			{
 				ModelState.AddModelError("TermsAccepted", "Примите условия");
 			}
@@ -76,6 +76,7 @@ namespace HacatonApp.Controllers
 			ViewBag.Error = "Неверный email или пароль";
 			return View();
 		}
+
 
 		[HttpPost]
 		public async Task<IActionResult> Logout()

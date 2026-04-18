@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.AspNetCore.Identity;
+using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace HacatonApp.Controllers
 {
@@ -18,7 +21,19 @@ namespace HacatonApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult 
+        public async Task<IActionResult> RateProject(int id)
+        {
+            
+            var criterias = await _context.Criterias.ToListAsync();
+            string criteriasJson = JsonConverter.SeriliaseObject(criterias),
+            RateProjectWithCriteriaToViewModel model = new RateProjectWithCriteriaToViewModel
+            {
+                criteriasJson
+
+            };
+
+            return View(model);
+        }
 
         [HttpGet]
         public IActionResult SubmitZaiavka() => View();
