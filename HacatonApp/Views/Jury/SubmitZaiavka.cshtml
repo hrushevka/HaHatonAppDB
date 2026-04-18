@@ -3,10 +3,217 @@
     ViewData["Title"] = "Заявка на судью";
 }
 
-<form method="post">
-    <input name="FirstName" placeholder="Имя" />
-    <input name="LastName" placeholder="Фамилия" />
-    < name="Motivation" placeholder="Мотивация" />
-    <input name="ContactEmail" placeholder="Email" />
-    <button type="submit">Отправить</button>
-</form>
+<style>
+    .page-container {
+        max-width: 600px;
+        margin: 3rem auto;
+    }
+    .page-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+    .page-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #1a73e8, #6c8cff);
+        color: white;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.2);
+    }
+    .form-card {
+        border: 1px solid #e9ecef;
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        background: white;
+    }
+    .form-card-body {
+        padding: 2.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #202124;
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 0.95rem;
+    }
+    .form-label i {
+        color: #1a73e8;
+        margin-right: 0.5rem;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.8rem 1.2rem;
+        border: 2px solid #e9ecef;
+        border-radius: 14px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background-color: #fafbfc;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #1a73e8;
+        background-color: white;
+        box-shadow: 0 0 0 4px rgba(26, 115, 232, 0.1);
+    }
+    .form-control::placeholder {
+        color: #9aa0a6;
+        font-weight: 400;
+    }
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #1a73e8, #1557b0);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 1rem;
+        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+    }
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(26, 115, 232, 0.4);
+    }
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+    .info-box {
+        background: linear-gradient(135deg, #e8f0fe, #d2e3fc);
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .info-icon {
+        font-size: 1.8rem;
+    }
+    .info-text {
+        color: #1557b0;
+        font-weight: 500;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    .row-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    .validation-message {
+        color: #ea4335;
+        font-size: 0.85rem;
+        margin-top: 0.4rem;
+        font-weight: 500;
+    }
+    .required-badge {
+        color: #ea4335;
+        margin-left: 0.2rem;
+    }
+    @@media (max-width: 768px) {
+        .page-container {
+            margin: 2rem 1rem;
+        }
+        .form-card-body {
+            padding: 1.5rem;
+        }
+        .row-fields {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="display-6 fw-bold mb-2">Стать судьёй</h1>
+        <p class="text-secondary">Присоединяйтесь к экспертной команде и оценивайте проекты участников</p>
+    </div>
+
+    <div class="form-card">
+        <div class="form-card-body">
+            <div class="info-box">
+                <span class="info-icon">📋</span>
+                <span class="info-text">Все поля обязательны для заполнения. Мы рассмотрим вашу заявку в течение 24 часов.</span>
+            </div>
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" style="border-radius: 14px; margin-bottom: 1.5rem;"></div>
+
+                <div class="row-fields">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span>Имя</span>
+                            <span class="required-badge">*</span>
+                        </label>
+                        <input name="FirstName" 
+                               class="form-control" 
+                               placeholder="Александр" 
+                               required />
+                        <span asp-validation-for="FirstName" class="validation-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span>Фамилия</span>
+                            <span class="required-badge">*</span>
+                        </label>
+                        <input name="LastName" 
+                               class="form-control" 
+                               placeholder="Иванов" 
+                               required />
+                        <span asp-validation-for="LastName" class="validation-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>Email для связи</span>
+                        <span class="required-badge">*</span>
+                    </label>
+                    <input name="ContactEmail" 
+                           type="email" 
+                           class="form-control" 
+                           placeholder="alex@example.com" 
+                           required />
+                    <span asp-validation-for="ContactEmail" class="validation-message"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>Почему вы должны быть экспертом?</span>
+                        <span class="required-badge">*</span>
+                    </label>
+                    <textarea name="Motivation" 
+                              class="form-control" 
+                              placeholder="Расскажите о вашем опыте в проведении хакатонов, экспертизе в IT-сфере или почему вы хотите стать судьёй..."
+                              required></textarea>
+                    <span asp-validation-for="Motivation" class="validation-message"></span>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                     Отправить заявку
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
