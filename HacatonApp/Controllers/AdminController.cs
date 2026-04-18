@@ -117,7 +117,6 @@ namespace HacatonApp.Controllers
             var user = await _userManager.FindByIdAsync(zaiavka.UserId);
             if (user == null) return NotFound();
 
-
             zaiavka.ReviewedAt = DateTime.Now;
             zaiavka.Status = JuryZaiavkaStatus.Danied;
             zaiavka.AdminComment = adminComment;
@@ -125,6 +124,13 @@ namespace HacatonApp.Controllers
             await _context.SaveChangesAsync();
 
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> CheckZaiavka(int id)
+        {
+            var zaiavka = _context.JuryZaiavkas.FirstOrDefault(o => o.Id == id);
+            if (zaiavka == null) return NotFound();
+            return View(zaiavka);
         }
     }
 }

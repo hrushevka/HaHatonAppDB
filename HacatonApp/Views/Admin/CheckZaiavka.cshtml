@@ -1,0 +1,17 @@
+﻿@model JuryZaiavkaViewModel
+@{
+    ViewData["Title"] = "Рассмотр завки на судью";
+}
+
+<h2>Принятие заявки на судью для @Model.FirstName @Model.LastName</h2>
+<p>Email для связи: @Model.ContactEmail</p>
+
+<form method="post">
+    <input type="hidden" asp-route-id="ZaiavkaId" />
+
+    <input asp-route-adminComment="" type="text" name="name" placeholder="Ваш коментарий" />
+
+    <button asp-action="KrutiZaiavky" type="submit" class="btn btn-primary mt-3">Да</button>
+    <button asp-action="PlohoZaiavky" type="submit" class="btn btn-primary mt-3">Нет</button>
+    <a asp-action="Zaiavki" class="btn btn-secondary mt-3">Назад</a>
+</form>
