@@ -28,10 +28,12 @@ namespace HacatonApp.Controllers
 			_context = context;
 		}
 
+		[HttpGet]
+		public IActionResult AccessDanied() => View();
 
-		[HttpPost]
 		[HttpGet]
         public IActionResult Register() => View();
+		[HttpPost]
 		public async Task<IActionResult> Register(RegisterUserViewModel model)
 		{
 			if (!model.TermsAccepted || model.Password != model.ConfirmPassword)

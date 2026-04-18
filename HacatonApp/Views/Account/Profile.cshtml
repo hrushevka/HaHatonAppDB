@@ -1,4 +1,4 @@
-﻿@model EditProfileViewModel
+﻿@model ChangeProfileViewModel
 @{
     ViewData["Title"] = "Профиль";
 }
@@ -11,7 +11,6 @@
             </div>
             <div class="card-body">
                 <form method="post">
-                    <input type="hidden" asp-for="UserId" />
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -29,30 +28,6 @@
                     <div class="mb-3">
                         <label asp-for="Email" class="form-label"></label>
                         <input asp-for="Email" class="form-control" readonly />
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="PhoneNumber" class="form-label"></label>
-                        <input asp-for="PhoneNumber" class="form-control" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="Address" class="form-label"></label>
-                        <input asp-for="Address" class="form-control" />
-                        <span asp-validation-for="Address" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="City" class="form-label"></label>
-                        <input asp-for="City" class="form-control" />
-                        <span asp-validation-for="City" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3">
-                        <label asp-for="DateOfBirth" class="form-label"></label>
-                        <input asp-for="DateOfBirth" type="date" class="form-control" />
-                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">

@@ -1,4 +1,4 @@
-﻿@model LoginViewModel
+﻿@model LoginUserViewModel
 @{
     ViewData["Title"] = "Вход";
 }
@@ -23,11 +23,6 @@
                         <label asp-for="Password" class="form-label">Пароль</label>
                         <input asp-for="Password" type="password" class="form-control" />
                         <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-
-                    <div class="mb-3 form-check">
-                        <input asp-for="RememberMe" class="form-check-input" />
-                        <label asp-for="RememberMe" class="form-check-label">Запомнить меня</label>
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">Войти</button>
