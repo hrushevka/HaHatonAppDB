@@ -35,7 +35,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Zaiavki">Заявки на судебство</a>
                             </li>
                         }
-                        @if (User.IsInRole("Ghost"))
+                        @if (!User.IsInRole("Jury") && !User.IsInRole("Teamer"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Jury" asp-action="SubmitZaiavka">Подать заявку на судебство</a>
