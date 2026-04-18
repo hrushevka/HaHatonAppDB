@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace HacatonApp.Models
-{ 
+{
     public class LoginUserViewModel
     {
         public string Password { get; set; } = string.Empty;
@@ -9,14 +9,14 @@ namespace HacatonApp.Models
     }
     public class RegisterUserViewModel
     {
-        public bool  TermsAccepted { get; set; } = false;
-		public string Password { get; set; } = string.Empty;
+        public bool TermsAccepted { get; set; } = false;
+        public string Password { get; set; } = string.Empty;
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        public string Email { get; set; } = string.Empty; 
-		public string FirstName { get; set; } = string.Empty;
-		public string LastName { get; set; } = string.Empty;
-	}
+        public string Email { get; set; } = string.Empty;
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+    }
     public class RegisterTeamViewModel
     {
         public string Name { get; set; } = string.Empty;
@@ -29,5 +29,11 @@ namespace HacatonApp.Models
         public required string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public required string Email { get; set; } = string.Empty;
+    }
+    public class ChangePasswordViewModel
+    {
+        public string OldPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public string NewConfirmPassword { get; set; } = string.Empty;
     }
 }

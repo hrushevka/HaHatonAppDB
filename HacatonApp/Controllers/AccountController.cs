@@ -95,6 +95,7 @@ namespace HacatonApp.Controllers
 			user.LastName = model.LastName;
             return View(); 
 		}
-
+		[HttpGet]
+		public IActionResult ChangePassword() => View();
     }
 }
