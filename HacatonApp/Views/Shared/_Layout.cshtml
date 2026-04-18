@@ -1,3 +1,42 @@
+@using System
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    string IsActive(params string[] controllers) => Array.Exists(controllers, controller => string.Equals(controller, currentController, StringComparison.OrdinalIgnoreCase))
+        ? "active"
+        : string.Empty;
+
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    var mobileExtraController = "Account";
+    var mobileExtraAction = isAuthenticated ? "ChangeProfile" : "Login";
+    var mobileExtraLabel = isAuthenticated ? "Профиль" : "Вход";
+    var mobileExtraIcon = isAuthenticated ? "👤" : "🔐";
+
+    if (User.IsInRole("Admin"))
+    {
+        mobileExtraController = "Admin";
+        mobileExtraAction = "Index";
+        mobileExtraLabel = "Админ";
+        mobileExtraIcon = "⚙️";
+    }
+    else if (User.IsInRole("Jury"))
+    {
+        mobileExtraController = "Jury";
+        mobileExtraAction = "Index";
+        mobileExtraLabel = "Оценка";
+        mobileExtraIcon = "🧑‍⚖️";
+    }
+    else if (isAuthenticated && !User.IsInRole("Teamer"))
+    {
+        mobileExtraController = "Team";
+        mobileExtraAction = "SubmitTeamZaiavka";
+        mobileExtraLabel = "Создать";
+        mobileExtraIcon = "➕";
+    }
+
+    var mobileExtraActiveClass = User.IsInRole("Admin")
+        ? IsActive("Admin", "Criteria")
+        : IsActive(mobileExtraController);
+}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,36 +46,36 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="d-flex flex-column min-vh-100">
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 border-bottom">
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg py-3">
             <div class="container">
                 <a class="navbar-brand fw-bold d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
                     <span>🚀</span>
                     <span>Хакатон</span>
                 </a>
 
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Переключить навигацию">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav mx-auto gap-lg-1">
-                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Главная</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Projects" asp-action="Index">Проекты</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Teams" asp-action="Index">Команды</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Results" asp-action="Index">Лидерборд</a></li>
+                <div class="collapse navbar-collapse site-nav-panel" id="navbarContent">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-link @IsActive("Home")" asp-controller="Home" asp-action="Index">Главная</a></li>
+                        <li class="nav-item"><a class="nav-link @IsActive("Projects")" asp-controller="Projects" asp-action="Index">Проекты</a></li>
+                        <li class="nav-item"><a class="nav-link @IsActive("Teams")" asp-controller="Teams" asp-action="Index">Команды</a></li>
+                        <li class="nav-item"><a class="nav-link @IsActive("Results")" asp-controller="Results" asp-action="Index">Лидерборд</a></li>
 
                         @if (User.IsInRole("Jury") || User.IsInRole("Admin"))
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Jury" asp-action="Index">Оценка проектов</a></li>
+                            <li class="nav-item"><a class="nav-link @IsActive("Jury")" asp-controller="Jury" asp-action="Index">Оценка проектов</a></li>
                         }
 
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Администрирование</a>
-                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                                <a class="nav-link dropdown-toggle @IsActive("Admin", "Criteria")" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Администрирование</a>
+                                <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Панель администратора</a></li>
                                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users">Пользователи</a></li>
                                     <li><a class="dropdown-item" asp-controller="Admin" asp-action="Zaiavki">Заявки жюри</a></li>
@@ -46,10 +85,10 @@
                             </li>
                         }
 
-                        @if (!User.IsInRole("Jury") && !User.IsInRole("Admin") && !User.IsInRole("Teamer") && User.Identity?.IsAuthenticated == true)
+                        @if (!User.IsInRole("Jury") && !User.IsInRole("Admin") && !User.IsInRole("Teamer") && isAuthenticated)
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Jury" asp-action="SubmitZaiavka">Стать судьёй</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Team" asp-action="SubmitTeamZaiavka">Создать команду</a></li>
+                            <li class="nav-item"><a class="nav-link @IsActive("Jury")" asp-controller="Jury" asp-action="SubmitZaiavka">Стать судьёй</a></li>
+                            <li class="nav-item"><a class="nav-link @IsActive("Team")" asp-controller="Team" asp-action="SubmitTeamZaiavka">Создать команду</a></li>
                         }
                     </ul>
 
@@ -59,20 +98,20 @@
         </nav>
     </header>
 
-    <main role="main" class="flex-grow-1">
-        <div class="container pt-4">
+    <main role="main" class="site-main">
+        <div class="container site-flash-container pt-4">
             @if (TempData["SuccessMessage"] is string successMessage && !string.IsNullOrWhiteSpace(successMessage))
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     @successMessage
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
                 </div>
             }
             @if (TempData["ErrorMessage"] is string errorMessage && !string.IsNullOrWhiteSpace(errorMessage))
             {
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     @errorMessage
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
                 </div>
             }
         </div>
@@ -80,7 +119,7 @@
         @RenderBody()
     </main>
 
-    <footer class="footer mt-auto border-top bg-white">
+    <footer class="footer mt-auto">
         <div class="container py-4">
             <div class="row align-items-center g-3">
                 <div class="col-md-4 text-center text-md-start">
@@ -102,6 +141,29 @@
             </div>
         </div>
     </footer>
+
+    <nav class="mobile-bottom-nav" aria-label="Мобильная навигация">
+        <a asp-controller="Home" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Home")">
+            <span class="mobile-bottom-nav__icon">🏠</span>
+            <span>Главная</span>
+        </a>
+        <a asp-controller="Projects" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Projects")">
+            <span class="mobile-bottom-nav__icon">💡</span>
+            <span>Проекты</span>
+        </a>
+        <a asp-controller="Teams" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Teams")">
+            <span class="mobile-bottom-nav__icon">👥</span>
+            <span>Команды</span>
+        </a>
+        <a asp-controller="Results" asp-action="Index" class="mobile-bottom-nav__link @IsActive("Results")">
+            <span class="mobile-bottom-nav__icon">🏆</span>
+            <span>Рейтинг</span>
+        </a>
+        <a asp-controller="@mobileExtraController" asp-action="@mobileExtraAction" class="mobile-bottom-nav__link @mobileExtraActiveClass">
+            <span class="mobile-bottom-nav__icon">@mobileExtraIcon</span>
+            <span>@mobileExtraLabel</span>
+        </a>
+    </nav>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

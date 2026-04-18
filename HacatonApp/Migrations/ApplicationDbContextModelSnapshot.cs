@@ -111,13 +111,20 @@ namespace HacatonApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<float>("MaxScore")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(10f);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<float>("Weight")
-                        .HasColumnType("real");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(1f);
 
                     b.HasKey("Id");
 
@@ -211,6 +218,80 @@ namespace HacatonApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects", (string)null);
+                });
+
+            modelBuilder.Entity("HacatonApp.Models.ProjectCriterionScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CriteriaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectReviewId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("Score")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CriteriaId");
+
+                    b.HasIndex("ProjectReviewId", "CriteriaId")
+                        .IsUnique();
+
+                    b.ToTable("ProjectCriterionScores", (string)null);
+                });
+
+            modelBuilder.Entity("HacatonApp.Models.ProjectReview", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("JuryUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<float>("TotalScore")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("real")
+                        .HasDefaultValue(0f);
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JuryUserId");
+
+                    b.HasIndex("ProjectId", "JuryUserId")
+                        .IsUnique();
+
+                    b.ToTable("ProjectReviews", (string)null);
                 });
 
             modelBuilder.Entity("HacatonApp.Models.Team", b =>
@@ -452,6 +533,36 @@ namespace HacatonApp.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HacatonApp.Models.ProjectCriterionScore", b =>
+                {
+                    b.HasOne("HacatonApp.Models.Criteria", null)
+                        .WithMany()
+                        .HasForeignKey("CriteriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HacatonApp.Models.ProjectReview", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HacatonApp.Models.ProjectReview", b =>
+                {
+                    b.HasOne("HacatonApp.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("JuryUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HacatonApp.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

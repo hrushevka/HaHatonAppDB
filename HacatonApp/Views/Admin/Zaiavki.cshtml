@@ -1,33 +1,51 @@
-﻿@model List<JuryZaiavkaViewModel>
+@model List<JuryZaiavkaViewModel>
 @{
-    ViewData["Title"] = "Пользователи";
+    ViewData["Title"] = "Заявки жюри";
 }
 
-<h2>Управление пользователями</h2>
+<div class="container py-5">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-2">Заявки жюри</h1>
+            <p class="text-secondary mb-0">Проверяйте мотивацию кандидатов и принимайте решение по заявкам.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">Назад в админ панель</a>
+    </div>
 
-<table class="table table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>Имя</th>
-            <th>Фамили</th>
-            <th>Причина</th>
-            <th>Email</th>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.FirstName</td>
-                <td>@user.LastName</td>
-                <td>@user.Motivation</td>
-                <td>@user.ContactEmail</td>
-                <td>
-                    <a asp-action="CheckZaiavka" asp-route-id="@user.ZaiavkaId" class="btn btn-warning btn-sm">
-                        Перейти к рассмотру
-                    </a>
-                </td>
-                
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Новых заявок жюри пока нет.</div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 table-stack">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Почему в жюри</th>
+                            <th>Email</th>
+                            <th class="text-end">Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td data-label="Имя">@user.FirstName</td>
+                                <td data-label="Фамилия">@user.LastName</td>
+                                <td data-label="Почему в жюри">@user.Motivation</td>
+                                <td data-label="Email">@user.ContactEmail</td>
+                                <td data-label="Действия" class="text-end">
+                                    <a asp-action="CheckZaiavka" asp-route-id="@user.ZaiavkaId" class="btn btn-warning btn-sm">Перейти к рассмотрению</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

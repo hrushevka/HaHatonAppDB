@@ -21,7 +21,7 @@
     {
         <div class="card border-0 shadow-sm">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0 table-stack">
                     <thead class="table-light">
                         <tr>
                             <th>Место</th>
@@ -36,13 +36,13 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="fw-bold">#@item.Rank</td>
-                                <td>
+                                <td data-label="Место" class="fw-bold">#@item.Rank</td>
+                                <td data-label="Проект">
                                     <div class="fw-semibold">@item.ProjectName</div>
                                     <div class="text-secondary small">@item.ProjectDescription</div>
                                 </td>
-                                <td>@item.TeamName</td>
-                                <td>
+                                <td data-label="Команда">@item.TeamName</td>
+                                <td data-label="Участники">
                                     @if (item.Members.Any())
                                     {
                                         <span class="small">@string.Join(", ", item.Members.Select(member => member.FullName))</span>
@@ -52,8 +52,8 @@
                                         <span class="text-secondary small">Нет участников</span>
                                     }
                                 </td>
-                                <td>@item.ReviewsCount</td>
-                                <td class="text-end fw-bold">@item.AverageScore.ToString("0.##") / 100</td>
+                                <td data-label="Оценок">@item.ReviewsCount</td>
+                                <td data-label="Средний балл" class="text-end fw-bold">@item.AverageScore.ToString("0.##") / 100</td>
                             </tr>
                         }
                     </tbody>

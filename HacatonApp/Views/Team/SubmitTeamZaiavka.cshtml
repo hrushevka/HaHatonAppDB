@@ -3,7 +3,7 @@
     ViewData["Title"] = "Заявка команды";
 }
 
-<div class="container py-5" style="max-width: 960px;">
+<div class="container py-5 page-container-wide">
     <div class="mb-4">
         <h1 class="display-6 fw-bold mb-2">Создание заявки команды</h1>
         <p class="text-secondary mb-0">
@@ -59,7 +59,7 @@
                             {
                                 var isChecked = Model.TeamMemberIds.Contains(member.UserId);
                                 <div class="col-md-6">
-                                    <label class="border rounded-3 p-3 d-flex gap-3 align-items-start h-100 w-100 bg-white">
+                                    <label class="member-option">
                                         @if (isChecked)
                                         {
                                             <input class="form-check-input mt-1 team-member-checkbox" type="checkbox" name="TeamMemberIds" value="@member.UserId" checked />
@@ -89,7 +89,7 @@
                     <span asp-validation-for="TeamMemberIds" class="text-danger small d-block mt-2"></span>
                 </div>
 
-                <div class="d-flex flex-wrap gap-3 mt-4">
+                <div class="d-flex flex-wrap gap-3 mt-4 page-actions">
                     <button type="submit" class="btn btn-primary btn-lg px-4">Отправить заявку</button>
                     <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg px-4">Отмена</a>
                 </div>

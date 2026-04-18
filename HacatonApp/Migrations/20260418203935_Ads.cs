@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HacatonApp.Migrations
 {
     /// <inheritdoc />
-    public partial class Ddc : Migration
+    public partial class Ads : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,8 @@ namespace HacatonApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Weight = table.Column<float>(type: "real", nullable: false)
+                    Weight = table.Column<float>(type: "real", nullable: false, defaultValue: 1f),
+                    MaxScore = table.Column<float>(type: "real", nullable: false, defaultValue: 10f)
                 },
                 constraints: table =>
                 {
@@ -266,6 +267,63 @@ namespace HacatonApp.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ProjectReviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    JuryUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    TotalScore = table.Column<float>(type: "real", nullable: false, defaultValue: 0f),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectReviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectReviews_AspNetUsers_JuryUserId",
+                        column: x => x.JuryUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ProjectReviews_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectCriterionScores",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectReviewId = table.Column<int>(type: "int", nullable: false),
+                    CriteriaId = table.Column<int>(type: "int", nullable: false),
+                    Score = table.Column<float>(type: "real", nullable: false, defaultValue: 0f)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectCriterionScores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProjectCriterionScores_Criterias_CriteriaId",
+                        column: x => x.CriteriaId,
+                        principalTable: "Criterias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProjectCriterionScores_ProjectReviews_ProjectReviewId",
+                        column: x => x.ProjectReviewId,
+                        principalTable: "ProjectReviews",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -316,6 +374,28 @@ namespace HacatonApp.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectCriterionScores_CriteriaId",
+                table: "ProjectCriterionScores",
+                column: "CriteriaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectCriterionScores_ProjectReviewId_CriteriaId",
+                table: "ProjectCriterionScores",
+                columns: new[] { "ProjectReviewId", "CriteriaId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectReviews_JuryUserId",
+                table: "ProjectReviews",
+                column: "JuryUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectReviews_ProjectId_JuryUserId",
+                table: "ProjectReviews",
+                columns: new[] { "ProjectId", "JuryUserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Teams_ProjectId",
                 table: "Teams",
                 column: "ProjectId",
@@ -341,16 +421,22 @@ namespace HacatonApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Criterias");
+                name: "JuryZaiavkas");
 
             migrationBuilder.DropTable(
-                name: "JuryZaiavkas");
+                name: "ProjectCriterionScores");
 
             migrationBuilder.DropTable(
                 name: "TeamZaiavkas");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Criterias");
+
+            migrationBuilder.DropTable(
+                name: "ProjectReviews");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

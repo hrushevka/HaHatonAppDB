@@ -6,20 +6,23 @@
 <style>
     .hero-card {
         border: 0;
-        border-radius: 24px;
+        border-radius: 28px;
         background: linear-gradient(135deg, #f4f8ff, #ffffff);
         box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
     }
+
     .feature-card {
         border: 0;
-        border-radius: 20px;
+        border-radius: 22px;
         box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
     .feature-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 16px 32px rgba(15, 23, 42, 0.1);
     }
+
     .feature-icon {
         width: 56px;
         height: 56px;
@@ -31,6 +34,20 @@
         background: #e8f0fe;
         color: #1a73e8;
         margin-bottom: 1rem;
+    }
+
+    @@media (max-width: 767.98px) {
+        .hero-card {
+            border-radius: 22px;
+        }
+
+        .hero-actions {
+            flex-direction: column;
+        }
+
+        .hero-actions .btn {
+            width: 100%;
+        }
     }
 </style>
 
@@ -44,7 +61,7 @@
                     выставляйте баллы по критериям и следите за лидербордом в реальном времени.
                 </p>
 
-                <div class="d-flex flex-wrap gap-3">
+                <div class="d-flex flex-wrap gap-3 hero-actions">
                     @if (!isAuthenticated)
                     {
                         <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg px-4">Регистрация</a>
