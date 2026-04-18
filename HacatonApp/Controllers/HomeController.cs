@@ -6,14 +6,10 @@ namespace HacatonApp.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        [HttpGet]
+        public IActionResult Index() => View();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        [HttpGet]
+        public IActionResult ProjectsList() => View();
     }
 }

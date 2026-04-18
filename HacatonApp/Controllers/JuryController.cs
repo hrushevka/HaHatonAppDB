@@ -16,6 +16,10 @@ namespace HacatonApp.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        [HttpGet]
+        public IActionResult 
+
         [HttpGet]
         public IActionResult SubmitZaiavka() => View();
         [HttpPost]
@@ -24,6 +28,7 @@ namespace HacatonApp.Controllers
             if (ModelState.IsValid)
             {
                 var userId = _userManager.GetUserId(User);
+                if (userId == null) return NotFound();
                 var zaiavka = new JuryZaiavka
                 {
                     UserId = userId,
