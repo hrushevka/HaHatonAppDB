@@ -44,9 +44,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedEmail = false;
     options.SignIn.RequireConfirmedPhoneNumber = false;
 })
-.AddEntityFrameworkStores<ApplicationDbContext>()
-.AddDefaultTokenProviders()
-.AddErrorDescriber<RussianIdentityErrorDescriber>();
+.AddEntityFrameworkStores<ApplicationDbContext>();
+//.AddDefaultTokenProviders();
+//.AddErrorDescriber<RussianIdentityErrorDescriber>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

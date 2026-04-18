@@ -8,7 +8,6 @@ namespace HacatonApp.Data
         public static async Task InitializeAsync(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
 
-            // Создаём роли
             string[] roles = { "Admin", "Jury", "Teamer", "Ghost"};
             foreach (var role in roles)
             {
@@ -16,8 +15,7 @@ namespace HacatonApp.Data
                     await roleManager.CreateAsync(new IdentityRole(role));
             }
 
-            // Создаём админа, если нет
-            var adminEmail = "admin@exmaple.com";
+            var adminEmail = "admin@example.com";
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
                 var admin = new ApplicationUser
@@ -26,12 +24,11 @@ namespace HacatonApp.Data
                     Email = adminEmail,
                     FirstName = "Админ",
                     LastName = "Тестович",
+                    EmailConfirmed = true
                 };
                 var result = await userManager.CreateAsync(admin, "Admin123!");
                 if (result.Succeeded)
                     await userManager.AddToRoleAsync(admin, "Admin");
-                    await userManager.AddToRoleAsync(admin, "Jury");
-                    await userManager.AddToRoleAsync(admin, "Teamer");
             }
         }
     }
