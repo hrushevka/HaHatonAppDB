@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
-COPY . .
-RUN dotnet restore "./HacatonApp.csproj"
-RUN dotnet publish "./HacatonApp.csproj" -c Release -o /app/publish
+COPY HacatonApp/ ./
+RUN dotnet restore "HacatonApp.csproj"
+RUN dotnet publish "HacatonApp.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 ENV ASPNETCORE_URLS=http://0.0.0.0:$PORT
