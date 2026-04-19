@@ -42,7 +42,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Хакатон</title>
+    <title>@ViewData["Title"] - WebHack</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
@@ -52,7 +52,7 @@
             <div class="container">
                 <a class="navbar-brand fw-bold d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
                     <span>🚀</span>
-                    <span>Хакатон</span>
+                    <span>WebHack</span>
                 </a>
 
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Переключить навигацию">
@@ -102,7 +102,7 @@
         <div class="container site-flash-container pt-4">
             @if (TempData["SuccessMessage"] is string successMessage && !string.IsNullOrWhiteSpace(successMessage))
             {
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible fade show " role="alert">
                     @successMessage
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрыть"></button>
                 </div>
@@ -123,7 +123,7 @@
         <div class="container py-4">
             <div class="row align-items-center g-3">
                 <div class="col-md-4 text-center text-md-start">
-                    <div class="fw-bold">🚀 Хакатон</div>
+                    <div class="fw-bold">🚀 WebHack</div>
                     <div class="text-secondary small">Платформа для команд, жюри и прозрачного лидерборда.</div>
                 </div>
                 <div class="col-md-4 text-center">
@@ -136,7 +136,7 @@
                     <a asp-controller="Results" asp-action="Index" class="text-decoration-none text-secondary">Лидерборд</a>
                 </div>
                 <div class="col-md-4 text-center text-md-end text-secondary small">
-                    &copy; @DateTime.Now.Year Хакатон
+                    &copy; @DateTime.Now.Year Хакеры Будущего
                 </div>
             </div>
         </div>
